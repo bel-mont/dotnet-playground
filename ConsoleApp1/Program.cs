@@ -8,5 +8,5 @@
 
 using System.Text.Json;
 
-var thirdMax = new ThirdMax();
-Console.WriteLine(JsonSerializer.Serialize(thirdMax.Run(new int[]{1,1,2})));
+var problem = new DisappearedNums();
+Console.WriteLine(JsonSerializer.Serialize(problem.FasterSolution(new int[]{4,3,2,7,8,2,3,1})));
