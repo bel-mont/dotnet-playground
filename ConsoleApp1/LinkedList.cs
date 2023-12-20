@@ -189,4 +189,47 @@ public class LinkedListNode
   {
     Value = value;
   }
+  
+  public LinkedListNode DetectCycle(LinkedListNode head) {
+    if (head == null || head.Next == null || head.Next.Next == null)
+    {
+      return null;
+    }
+      
+    // keep a slow pointer and a fast pointer
+    var slowPointer = head;
+    var fastPointer = slowPointer;
+    // iterate until the fast pointer reaches null OR it equals the slow pointer
+    var cycleFound = false;
+    while (fastPointer.Next != null && fastPointer.Next.Next != null)
+    {
+      slowPointer = slowPointer.Next;
+      fastPointer = fastPointer.Next.Next;
+          
+      // if both pointers point to the same object, we have a cycle
+      if (fastPointer == slowPointer)
+      {
+        cycleFound = true;
+        break;
+      }
+    }
+    // after cycle is found
+    // start a second loop, starting from the slow pointer
+    // make another pointer that moves at double the speed
+    // when both slow pointers meet, we found the cycle origin
+    if (cycleFound)
+    {
+      var verifierPointer = head;
+      while (true)
+      {
+        if (verifierPointer == slowPointer)
+        {
+          return slowPointer;
+        }
+        slowPointer = slowPointer.Next;
+        verifierPointer = verifierPointer.Next;
+      }
+    }
+    return null;
+  }
 }
