@@ -93,4 +93,27 @@ public class SlidingWindow
     }
     return answer;
   }
+  
+  public int EqualSubstring(string s, string t, int maxCost) {
+    // keep increasing the window of s, as long as my currentCost <= maxCost
+    // increment by the cost difference
+    // can be any contiguous substring in s 
+    var currentCost = 0;
+    var maxLength = 0;
+    var left = 0;
+    for (var right = 0; right < s.Length; right++)
+    {
+      currentCost += Math.Abs(s[right] - t[right]);
+      // move the window
+      while (currentCost > maxCost)
+      {
+        currentCost -= Math.Abs(s[left] - t[left]);
+        left++;
+      }
+      // do not forget the +1! off by one errors...
+      maxLength = Math.Max(maxLength, right - left + 1);
+    }
+
+    return maxLength;
+  }
 }
