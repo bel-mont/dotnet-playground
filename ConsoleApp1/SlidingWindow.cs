@@ -55,4 +55,42 @@ public class SlidingWindow
       
     return maxConsecutiveOnes;
   }
+  
+  public int MaxVowels(string s, int k) {
+    // in a window of length k, get amount of vowels
+    var vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u' };
+    var answer = 0;
+    var left = 0;
+    var right = 0;
+    var currSum = 0;
+    // initialize window
+    // easier to initialize the window this way, than adding conditions
+    // in the second loop
+    for (var i = 0; i < k; i++)
+    {
+      if (vowels.Contains(s[i]))
+      {
+        currSum++;
+      }
+    }
+    answer = currSum;
+
+    // start from where we left off
+    for (var i = k; i < s.Length; i++)
+    {
+      // just need to move the window now, since the size is already correct
+      if (vowels.Contains(s[i]))
+      {
+        currSum++;
+      }
+      // the window is always the same size now, so
+      // the last item can be found with i - k
+      if (vowels.Contains(s[i - k]))
+      {
+        currSum--;
+      }
+      answer = Math.Max(answer, currSum);
+    }
+    return answer;
+  }
 }
