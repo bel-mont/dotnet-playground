@@ -319,4 +319,23 @@ public class Hash
 
     return shortestLength;
   }
+  
+  public int FindLucky(int[] arr) {
+    var counts = new Dictionary<int, int>();
+    var luckyInt = -1;
+    foreach (var n in arr)
+    {
+      counts.TryGetValue(n, out int curr);
+      counts[n] = curr + 1;
+    }
+
+    foreach (var pair in counts)
+    {
+      if (pair.Key == pair.Value)
+      {
+        luckyInt = Math.Max(pair.Value, luckyInt);
+      }
+    }
+    return luckyInt;
+  }
 }
