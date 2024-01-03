@@ -164,4 +164,61 @@
 
     return maxLength;
   }
+  
+  public IList<IList<string>> GroupAnagrams(string[] strs) {
+    var anagrams = new Dictionary<string, List<string>>();
+
+    foreach (var s in strs)
+    {
+      var chars = s.ToCharArray();
+      Array.Sort(chars);
+      var sortedString = new string(chars);
+      if (!anagrams.ContainsKey(sortedString))
+      {
+        anagrams[sortedString] = new List<string>();    
+      }
+      anagrams[sortedString].Add(s);
+    }
+
+    var result = new List<IList<string>>(anagrams.Values);
+    return result;
+  }
+  
+  public int MinimumCardPickup(int[] cards) {
+    // hash map first, will try sliding window later
+    var cardIndexes = new Dictionary<int, List<int>>();
+
+    for (var i = 0; i < cards.Length; i++)
+    {
+      if (!cardIndexes.ContainsKey(cards[i]))
+      {
+        cardIndexes[cards[i]] = new List<int>();
+      }
+      //store the current array for each element
+      cardIndexes[cards[i]].Add(i);
+    }
+
+    var shortestLength = -1;
+    foreach (var n in cardIndexes)
+    {
+      var arr = n.Value;
+      // iterate each index
+      if (arr.Count == 1)
+      {
+        continue;
+      }
+            
+      for (var i = 1; i < arr.Count; i++)
+      {
+        var curr = arr[i] - arr[i - 1] + 1;
+        if (shortestLength == -1)
+        {
+          shortestLength = curr;
+        }
+        shortestLength = Math.Min(shortestLength, curr);
+      }
+    }
+
+    return shortestLength;
+  }
 }
