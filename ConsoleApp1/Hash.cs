@@ -1,4 +1,6 @@
-﻿public class Hash
+﻿using System.Text;
+
+public class Hash
 {
   public int SubarraySum(int[] nums, int k) {
     // store the amount of times a sum appears
@@ -162,6 +164,102 @@
       }
     }
 
+    return maxLength;
+  }
+  
+  public StringBuilder sb = new StringBuilder();
+
+  public int EqualPairs(int[][] grid) {
+    var rows = new Dictionary<string, int>();
+    var cols = new Dictionary<string, int>();
+
+    // create the hashmaps
+    foreach (var row in grid)
+    {
+      var rowKey = ArrayToStr(row);
+      rows.TryGetValue(rowKey, out int count);
+      rows[rowKey] = count + 1;
+    }
+
+    for (var col = 0; col < grid[0].Length; col++)
+    {
+      var newCol = new int[grid.Length];
+      for (var row = 0; row < grid.Length; row++)
+      {
+        newCol[row] = grid[row][col];
+      }
+      var colKey = ArrayToStr(newCol);
+      cols.TryGetValue(colKey, out int count);
+      cols[colKey] = count + 1;
+    }
+
+    // iterate all rows, and add their count to our answer IF they have a col equivalent
+    var totalPairs = 0;
+    foreach (var rowPair in rows)
+    {
+      if (cols.ContainsKey(rowPair.Key))
+      {
+        // multiply because we need to know how many rows
+        // can pair with how many cols
+        // ex: 2 rows and 2 pairs make 4 combinations.
+        totalPairs += rowPair.Value * cols[rowPair.Key];
+      }
+    }
+    return totalPairs;
+  }
+
+  public string ArrayToStr(int[] nums)
+  {
+    foreach (var number in nums)
+    {
+      sb.Append($"{number}-");
+    }
+    var result = sb.ToString();
+    sb.Clear();
+    return result;
+  }
+  
+  public bool CanConstruct(string ransomNote, string magazine) {
+    // keep track of the available letters in magazine
+    // then loop the note, return false if we run out of letters for it
+    var magChars = new Dictionary<char, int>();
+    foreach (var c in magazine)
+    {
+      magChars.TryGetValue(c, out int count);
+      magChars[c] = count + 1;
+    }
+    
+    foreach(var c in ransomNote)
+    {
+      if (!magChars.ContainsKey(c))
+      {
+        return false;
+      }
+      if (magChars[c] <= 0)
+      {
+        return false;
+      }
+      magChars[c]--;
+    }
+
+    return true;
+  }
+  
+  public int LengthOfLongestSubstring(string s) {
+    // keep track of the index of each character
+    var indexes = new Dictionary<char, int>();
+    var leftIndex = 0;
+    var maxLength = 0;
+    
+    for (var i = 0; i < s.Length; i++)
+    {
+      if (indexes.ContainsKey(s[i]) && indexes[s[i]] >= leftIndex)
+      {
+        leftIndex = indexes[s[i]] + 1;
+      }
+      indexes[s[i]] = i;
+      maxLength = Math.Max(maxLength, i - leftIndex + 1);
+    }
     return maxLength;
   }
   
