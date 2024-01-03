@@ -244,4 +244,22 @@ public class Hash
 
     return true;
   }
+  
+  public int LengthOfLongestSubstring(string s) {
+    // keep track of the index of each character
+    var indexes = new Dictionary<char, int>();
+    var leftIndex = 0;
+    var maxLength = 0;
+    
+    for (var i = 0; i < s.Length; i++)
+    {
+      if (indexes.ContainsKey(s[i]) && indexes[s[i]] >= leftIndex)
+      {
+        leftIndex = indexes[s[i]] + 1;
+      }
+      indexes[s[i]] = i;
+      maxLength = Math.Max(maxLength, i - leftIndex + 1);
+    }
+    return maxLength;
+  }
 }
