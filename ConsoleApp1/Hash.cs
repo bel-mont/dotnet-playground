@@ -338,4 +338,27 @@ public class Hash
     }
     return luckyInt;
   }
+  
+  public int MaxSubarrayLength(int[] nums, int k) {
+    // sliding window based on counts
+    var counts = new Dictionary<int, int>();
+    var maxLength = 0;
+    var left = 0;
+    for (var right = 0; right < nums.Length; right++)
+    {
+      counts.TryGetValue(nums[right], out int curr);
+      counts[nums[right]] = curr + 1;
+
+      // right for condition, left to move the pointer
+      while (counts[nums[right]] > k)
+      {
+        counts[nums[left]]--;
+        left++;
+      }
+  
+      maxLength = Math.Max(maxLength, right - left + 1);
+    }
+
+    return maxLength;
+  }
 }
