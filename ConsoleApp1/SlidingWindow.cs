@@ -116,4 +116,28 @@ public class SlidingWindow
 
     return maxLength;
   }
+  
+  public int MaximumUniqueSubarray(int[] nums) {
+    // sliding window to remove duplicates
+    // prefix sum in an array to find its index with best score
+    // however, the array's elements cannot be repeated
+    var left = 0;
+    var max = 0;
+    var set = new HashSet<int>(); // add items to the set, if we see a repeat item we slide the left part of the window.
+    var curr = 0; // prefix sum
+    for (var right = 0; right < nums.Length; right++)
+    {
+      while (set.Contains(nums[right]))
+      {
+        curr -= nums[left];
+        set.Remove(nums[left]);
+        left++;
+      }
+      set.Add(nums[right]);
+      curr += nums[right];
+      max = Math.Max(max, curr);
+    }
+
+    return max;
+  }
 }
