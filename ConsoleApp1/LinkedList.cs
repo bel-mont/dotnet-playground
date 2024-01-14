@@ -232,4 +232,102 @@ public class LinkedListNode
     }
     return null;
   }
+  
+  public class ListNode {
+      public int val;
+        public ListNode next;
+        public ListNode(int val=0, ListNode next=null) {
+            this.val = val;
+            this.next = next;
+        }
+  }
+  public ListNode ReverseList(ListNode head) {
+    if (head == null || head.next == null)
+    {
+      return head;
+    }
+
+    ListNode prev = null;   
+    
+    while (head != null)
+    {
+      var nextNode = head.next;
+      head.next = prev;
+      prev = head;
+      head = nextNode;
+    }
+
+    return prev;
+  }
+  
+  public ListNode SwapPairs(ListNode head) {
+    if (head == null || head.next == null)
+    {
+      return head;
+    }
+
+    // item to return at the end
+    var newHead = head.next;
+
+    ListNode prev = null;   
+    
+    while (head != null && head.next != null)
+    {
+      if (prev != null)
+      {
+        prev.next = head.next; // A.n -> C.n (D)
+      }
+      // keep track of this to be able to continue after the swap
+      var nextNode = head.next.next;
+
+      head.next.next = head; // in pair A B, make B point to A
+      head.next = nextNode; // A.next is now C (will be swapped in the next loop)
+
+      // head becomes the "previous" node, because it gets moved
+      // to the front B A, so it will be the "previous" of the next node C
+      prev = head; // A
+      head = nextNode; // move to next pair, so the new head is C
+      // to avoid odd length issues, point C.next 
+    }
+
+    return newHead;
+  }
+  
+  public int PairSum(ListNode head) {
+    // fast && slow pointer to find middle of list (fast == null)
+    var middleNode = GetMiddleNode(head);
+
+    // Reverse the second part of the list (where slowPointer is at)
+    var reversedListHead = ReverseList(middleNode);
+    // after reversal, A B C D -> A B D C (A + D, B + C, etc.)
+
+    var aNode = head;
+    var bNode = reversedListHead;
+
+    // iterate with new slowPointer = head, and fastPointer = middle
+    // continue until fastPointer == null
+    var sum = 0;
+    while (bNode != null)
+    {
+      sum = Math.Max(sum, aNode.val + bNode.val);
+      aNode = aNode.next;
+      bNode = bNode.next;
+    }
+
+    return sum;
+  }
+
+  ListNode GetMiddleNode(ListNode head)
+  {
+    var slowPointer = head;
+    var fastPointer = head;
+
+    while (fastPointer != null)
+    {
+      slowPointer = slowPointer.next;
+      fastPointer = fastPointer.next.next;
+    }
+
+    return slowPointer;
+  }
 }
