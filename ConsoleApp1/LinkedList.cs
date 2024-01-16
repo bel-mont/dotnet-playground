@@ -330,4 +330,96 @@ public class LinkedListNode
 
     return slowPointer;
   }
+  
+  public ListNode ReverseBetween(ListNode head, int left, int right) {
+    if (head == null || head.next == null || left == right)
+    {
+      return head;
+    }
+    
+    ListNode prev = null;
+    var curr = 1;
+    var currNode = head;
+    ListNode sublistHeadPredecessor = null;
+    ListNode sublistHead  = null;
+    ListNode sublistTailSuccessor  = null;
+    while (currNode != null && curr <= right)
+    {
+      if (sublistHeadPredecessor == null && curr + 1 == left)
+      {
+        sublistHeadPredecessor = currNode; // in A B C D F (2 4), Stores A for later use
+      }
+      
+      if (curr >= left)
+      {
+        var nextNode = currNode.next; 
+        if (curr + 1 > right)
+        {
+          sublistTailSuccessor  = nextNode; // In A B C D F (2 4) stores F to connect it later B -> F
+        }
+        if (sublistHead  == null)
+        {
+          sublistHead  = currNode; // In A B C D F (2 4) stores B, to connect it to F later B -> F
+        }
+        
+        currNode.next = prev;
+
+        prev = currNode; // In A B C D F, D would be the last Prev
+        currNode = nextNode; 
+      }
+      else
+      {
+        currNode = currNode.next;
+      }
+      curr++;
+    }
+    if (sublistHeadPredecessor != null)
+    {
+      sublistHeadPredecessor.next = prev; // A -> D
+    }
+    sublistHead.next = sublistTailSuccessor ; // B -> F
+    
+    if (left == 1)
+    {
+      head = prev;
+    }
+    return head;
+  }
+    
+  public ListNode RemoveNthFromEnd(ListNode head, int n) {
+    if (head == null || head.next == null)
+    {
+      return null;
+    }
+    var curr = 0;
+    var advanceNode = head;
+    while (curr < n && advanceNode.next != null)
+    {
+      advanceNode = advanceNode.next;
+      curr++;
+    }
+
+    // after being n away from head, get to end of list
+    // the slow pointer should be n away from the end
+    ListNode prev = null; // keep reference to link nodes later
+    var nthAwayNode = head;
+    while (advanceNode != null)
+    {
+      prev = nthAwayNode;
+      nthAwayNode = nthAwayNode.next;
+      advanceNode = advanceNode.next;
+      // keep increasing to check later
+      curr++;
+    }
+
+    if (curr == n)
+    {
+      // when no change occurred, we were removing the head
+      // there was no movement
+      return head.next;
+    }
+
+    prev.next = prev.next.next;
+    return head;
+  }
 }
