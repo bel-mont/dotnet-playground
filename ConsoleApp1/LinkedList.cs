@@ -422,4 +422,37 @@ public class LinkedListNode
     prev.next = prev.next.next;
     return head;
   }
+  
+  public ListNode RemoveElements(ListNode head, int val) {
+    ListNode newHead = null;
+    ListNode prev = null;
+
+    while (head != null)
+    {
+      if (head.val == val)
+      {
+        if (head.next == null && prev != null) // end!
+        {
+          prev.next = null;
+        }
+        head = head.next;
+        continue;
+      }
+        
+      if (newHead == null)
+      {
+        newHead = head;
+      }
+
+      if (prev != null)
+      {
+        prev.next = head;
+      }
+      prev = head;
+
+      head = head.next;
+    }
+
+    return newHead;
+  }
 }
