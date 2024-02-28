@@ -8,5 +8,20 @@
 
 using System.Text.Json;
 
-var problem = new DisappearedNums();
-Console.WriteLine(JsonSerializer.Serialize(problem.FasterSolution(new int[]{4,3,2,7,8,2,3,1})));
+var graphs = new Graphs();
+const int n = 5;
+var edges = new int[][]
+{
+  // new [] {0,1},
+  // new [] {1,2},
+  // new [] {3,4},
+  new [] {0,1},
+  new [] {1,2},
+  new [] {2,3},
+  new [] {3,4},
+};
+
+var res = graphs.CountComponents(n, edges);
+
+Console.WriteLine("RESULT");
+Console.WriteLine(JsonSerializer.Serialize(res));
