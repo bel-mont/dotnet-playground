@@ -86,3 +86,98 @@
     }
   }
 }
+
+public class Leetcode1971
+{
+  public Dictionary<int, List<int>> graph = new Dictionary<int, List<int>>();
+  public HashSet<int> seen = new HashSet<int>();
+  
+  public bool ValidPath(int n, int[][] edges, int source, int destination) {
+    if (edges.Length == 0) return source == 0 && destination == 0;
+    // input type: array of edges
+    // the question is: are the source and destination in the same component?
+    
+    for (var i = 0; i < n; i++)
+    {
+      graph[i] = new List<int>();
+    }
+
+    foreach (var e in edges)
+    {
+      graph[e[0]].Add(e[1]);
+      graph[e[1]].Add(e[0]);
+    }
+    return Dfs(source, destination);
+  }
+
+  public bool Dfs(int node, int destination)
+  {
+    if (node == destination) return true;
+    if (seen.Contains(node)) return false;
+    seen.Add(node);
+    foreach (var neighbor in this.graph[node])
+    {
+      if (Dfs(neighbor, destination)) return true;
+    }
+    return false;
+  }
+}
+
+public class Leetcode695 {
+  int gridRow;
+  int gridCol;
+  int[][] directions = new int[][] 
+    {new int[] {0, 1}, new int[] {1, 0}, new int[] {0, -1}, new int[] {-1, 0}};
+  bool[,] seen;
+
+  public int MaxAreaOfIsland(int[][] grid) {
+    int ans = 0;
+    gridRow = grid.Length;
+    gridCol = grid[0].Length;
+    seen = new bool[gridRow, gridCol];
+    var currentComponentArea = 0;
+
+    // biggest component area
+    for (var row = 0; row < gridRow; row++)
+    {
+      for (var col = 0; col < gridCol; col++)
+      {
+        if (grid[row][col] == 1 && !seen[row, col])
+        {
+          seen[row, col] = true;
+          currentComponentArea = Dfs(row, col, grid);
+          // Dfs returns the neighboring count
+          // need to include the ++ for the current node
+          currentComponentArea++;
+        }
+        ans = Math.Max(ans, currentComponentArea);
+        currentComponentArea = 0;
+      }
+    }
+    return ans;
+  }
+
+  public int Dfs(int row, int col, int[][] grid)
+  {
+    var area = 0;
+    for (var i = 0; i < directions.Length; i++)
+    {
+      var dir = directions[i];
+      var nextRow = row + dir[0];
+      var nextCol = col + dir[1];
+
+      if (isConnected(nextRow, nextCol, grid) && !seen[nextRow, nextCol])
+      {
+        seen[nextRow, nextCol] = true;
+        area += Dfs(nextRow, nextCol, grid);
+        area++;
+      }
+    }
+    return area;
+  }
+
+  public bool isConnected(int row, int col, int[][] grid)
+  {
+    return row >= 0 && row < gridRow && col >= 0 && col < gridCol && grid[row][col] == 1;
+  }
+}

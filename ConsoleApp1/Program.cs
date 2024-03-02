@@ -8,20 +8,17 @@
 
 using System.Text.Json;
 
-var graphs = new Graphs();
-const int n = 5;
-var edges = new int[][]
+var graphs = new Leetcode695();
+var grid = new[]
 {
   // new [] {0,1},
   // new [] {1,2},
   // new [] {3,4},
-  new [] {0,1},
-  new [] {1,2},
-  new [] {2,3},
-  new [] {3,4},
+  new [] {0,1,1},
+  new [] {1,1,0},
 };
 
-var res = graphs.CountComponents(n, edges);
+var res = graphs.MaxAreaOfIsland(grid);
 
 Console.WriteLine("RESULT");
 Console.WriteLine(JsonSerializer.Serialize(res));
