@@ -181,3 +181,65 @@ public class Leetcode695 {
     return row >= 0 && row < gridRow && col >= 0 && col < gridCol && grid[row][col] == 1;
   }
 }
+
+public class Leetcde1091 {
+  int n;
+  int[][] directions = new int[][]
+  {
+    new int[]{-1,-1}, new int[]{-1,0}, new int[]{-1,1}, new int[]{0,-1}, new int[]{0,1}, new int[]{1, -1}, new int[]{1,0}, new int[]{1,1}
+  };
+  public int ShortestPathBinaryMatrix(int[][] grid) {
+    // in case we are blocked from the beginning
+    if (grid[0][0] == 1) return -1;
+    // BFS
+
+    n = grid.Length;
+    var seen = new bool[n][];
+    for (var i = 0; i < n; i++)
+    {
+      seen[i] = new bool[n];
+    }
+    seen[0][0] = true;
+    var queue = new Queue<State>();
+    queue.Enqueue(new State(0, 0, 1));
+
+    while (queue.Count != 0)
+    {
+      var state = queue.Dequeue();
+      var row = state.row;
+      var col = state.col;
+      var steps = state.steps;
+      // if we reach the end, bail
+      if (row == n - 1 && col == n - 1) return steps;
+
+      foreach (var dir in directions)
+      {
+        var nextRow = row + dir[0];
+        var nextCol = col + dir[1];
+        if (valid(nextRow, nextCol, grid) && !(seen[nextRow][nextCol]))
+        {
+          seen[nextRow][nextCol] = true;
+          queue.Enqueue(new State(nextRow, nextCol, steps + 1));
+        }
+      }
+    }
+    return -1;
+  }
+
+  public bool valid(int row, int col, int[][] grid)
+  {
+    return row >= 0 && row < n && col >= 0 && col < n && grid[row][col] == 0;
+  }
+}
+
+public class State {
+  public int row;
+  public int col;
+  public int steps;
+  public State(int _row, int _col, int _steps)
+  {
+    this.row = _row;
+    this.col = _col;
+    this.steps = _steps;
+  }
+}
