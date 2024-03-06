@@ -216,11 +216,9 @@ public class Leetcde1091 {
       {
         var nextRow = row + dir[0];
         var nextCol = col + dir[1];
-        if (valid(nextRow, nextCol, grid) && !(seen[nextRow][nextCol]))
-        {
-          seen[nextRow][nextCol] = true;
-          queue.Enqueue(new State(nextRow, nextCol, steps + 1));
-        }
+        if (!valid(nextRow, nextCol, grid) || seen[nextRow][nextCol]) continue;
+        seen[nextRow][nextCol] = true;
+        queue.Enqueue(new State(nextRow, nextCol, steps + 1));
       }
     }
     return -1;
@@ -241,5 +239,60 @@ public class State {
     this.row = _row;
     this.col = _col;
     this.steps = _steps;
+  }
+}
+
+
+public class Leetcode863 {
+  public class TreeNode {
+    public int val;
+    public TreeNode left;
+    public TreeNode right;
+    public TreeNode(int x) { val = x; }
+  }
+  public Dictionary<TreeNode, TreeNode> parents = new Dictionary<TreeNode, TreeNode>();
+  public IList<int> DistanceK(TreeNode root, TreeNode target, int k) {
+    // transform the tree to a graph
+    Dfs(root, null);
+    // while iterating, store the target node
+    // do BFS from the target node up until k
+    var queue = new Queue<TreeNode>();
+    var seen = new HashSet<TreeNode>();
+    queue.Enqueue(target); // NOT the root! we want to be k away from target
+    seen.Add(target);
+    var distance = 0;
+    while (queue.Count > 0 && distance < k)
+    {
+      var currLength = queue.Count;
+      for (var i = 0; i < currLength; i++)
+      {
+        var node = queue.Dequeue();
+        foreach(var neighbor in new TreeNode[] {node.left, node.right, parents[node]})
+        {
+          if (neighbor == null || seen.Contains(neighbor)) continue;
+          seen.Add(neighbor);
+          queue.Enqueue(neighbor);
+        }
+      }
+      distance++;
+    }
+
+    var ans = new List<int>();
+    while (queue.Count > 0)
+    {
+      var node = queue.Dequeue();
+      ans.Add(node.val);
+    }
+    return ans;
+  }
+
+  public void Dfs(TreeNode node, TreeNode parent)
+  {
+    // assign node as the parent of left and right
+    if (node == null) return;
+    this.parents[node] = parent;
+    Dfs(node.left, node);
+    Dfs(node.right, node);
+
   }
 }
