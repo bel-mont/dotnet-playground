@@ -296,3 +296,73 @@ public class Leetcode863 {
 
   }
 }
+
+public class Leetcode542 {
+  public int rowL;
+  public int colL;
+  public int[][] directions = new int[][]
+  {
+    new int[]{0, 1}, new int[]{ 1, 0}, new int[]{0, -1}, new int[]{-1, 0}
+  };
+
+  public int[][] UpdateMatrix(int[][] mat) {
+    rowL = mat.Length;
+    colL = mat[0].Length;
+
+    // BFS
+    var queue = new Queue<State>();
+    bool[][] seen = new bool[rowL][];
+    for (var i = 0; i < rowL; i++) seen[i] = new bool[colL];
+    // store all 0s first, as the initial level
+    for (var row = 0; row < rowL; row++)
+    {
+      for (var col = 0; col < colL; col++)
+      {
+        if (mat[row][col] == 0)
+        {
+          queue.Enqueue(new State(row, col, 1));
+          seen[row][col] = true;
+        }
+      }
+    }
+    // store the current level on each ans as we iterate
+    while (queue.Count > 0)
+    {
+      var state = queue.Dequeue();
+      var row = state.row;
+      var col = state.col;
+      var steps = state.steps;
+      foreach (var dir in directions)
+      {
+        var nextRow = row + dir[0];
+        var nextCol = col + dir[1];
+        if (isValid(nextRow, nextCol, mat) && !seen[nextRow][nextCol])
+        {
+          seen[nextRow][nextCol] = true;
+          queue.Enqueue(new State(nextRow, nextCol, steps + 1));
+          mat[nextRow][nextCol] = steps;
+        }
+      }
+    }
+
+    return mat;
+  }
+
+  public bool isValid(int row, int col, int[][] mat)
+  {
+    return row >= 0 && row < rowL && col >= 0 && col < colL && mat[row][col] == 1;
+  }
+  
+  public class State
+  {
+    public int row;
+    public int col;
+    public int steps;
+    public State(int _row, int _col, int _steps)
+    {
+      row = _row;
+      col = _col;
+      steps = _steps;
+    }
+  }
+}
