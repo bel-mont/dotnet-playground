@@ -436,3 +436,80 @@ public class Leetcode1293 {
     }
   }
 }
+
+public class Leetcode1129 {
+  int RED = 0;
+  int BLUE = 1;
+  public Dictionary<int, Dictionary<int, List<int>>> graph = new Dictionary<int, Dictionary<int, List<int>>>();
+  public int[] ShortestAlternatingPaths(int n, int[][] redEdges, int[][] blueEdges) {
+    // make a graph with the neighbors for each color
+    graph.Add(RED, new Dictionary<int, List<int>>());
+    graph.Add(BLUE, new Dictionary<int, List<int>>());
+
+    AddToGraph(RED, redEdges, n);
+    AddToGraph(BLUE, blueEdges, n);
+
+    var ans = new int[n];
+    for (var i = 0; i < n; i++) ans[i] = int.MaxValue;
+    var queue = new Queue<State>();
+    queue.Enqueue(new State(0, RED, 0));
+    queue.Enqueue(new State(0, BLUE, 0));
+
+    var seen = new bool[n][];
+    for (var i = 0; i < n; i++) seen[i] = new bool[2];
+    seen[0][RED] = true;
+    seen[0][BLUE] = true;
+
+    while (queue.Count > 0)
+    {
+      var state = queue.Dequeue();
+      var node = state.node;
+      var color = state.color;
+      var steps = state.steps;
+      ans[node] = Math.Min(ans[node], steps);
+
+      foreach (var neighbor in graph[color][node])
+      {
+        // 1 - color switches the color of the NEXT node,
+        // so we can check for validity of the alternating pattern
+        // 1 - 1 = 0, 1 - 0 = 1
+        // would probably be easier as bool
+        if (seen[neighbor][1 - color]) continue;
+        seen[neighbor][1 - color] = true;
+        queue.Enqueue(new State(neighbor, 1 - color, steps + 1));
+      }
+    }
+
+    for (var i = 0; i < n; i++)
+    {
+      if (ans[i] == int.MaxValue) ans[i] = -1;
+    }
+
+    return ans;
+  }
+
+  public void AddToGraph(int color, int[][] edges, int n)
+  {
+    for (var i = 0; i < n; i++) graph[color].Add(i, new List<int>());
+    
+    foreach (var e in edges)
+    {
+      var x = e[0];
+      var y = e[1];
+      graph[color][x].Add(y);
+    }
+  }
+  
+  public class State {
+    public int node;
+    public int color;
+    public int steps;
+    public State(int _node, int _color, int _steps)
+    {
+      this.node = _node;
+      this.color = _color;
+      this.steps = _steps;
+    }
+  }
+}
+
