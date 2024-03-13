@@ -293,7 +293,6 @@ public class Leetcode863 {
     this.parents[node] = parent;
     Dfs(node.left, node);
     Dfs(node.right, node);
-
   }
 }
 
@@ -363,6 +362,77 @@ public class Leetcode542 {
       row = _row;
       col = _col;
       steps = _steps;
+    }
+  }
+}
+public class Leetcode1293 {
+  public int rowL;
+  public int colL;
+  public int[][] directions = new int[][]
+  {
+    new int[]{0, 1}, new int[]{ 1, 0}, new int[]{0, -1}, new int[]{-1, 0}
+  };
+
+  public int ShortestPath(int[][] grid, int k) {
+    rowL = grid.Length;
+    colL = grid[0].Length;
+
+    var queue = new Queue<State>();
+    queue.Enqueue(new State(0, 0, k, 0));
+    var seen = new bool[rowL][][];
+    for (var i = 0; i < rowL; i++)
+    {
+      seen[i] = new bool[colL][];
+      for (var j = 0; j < colL; j++) seen[i][j] = new bool[k + 1];
+    }
+    seen[0][0][k] = true;
+    while (queue.Count > 0)
+    {
+      var state = queue.Dequeue();
+      var row = state.row;
+      var col = state.col;
+      var remain = state.remain;
+      var steps = state.steps;
+      if (row == rowL - 1 && col == colL - 1) return steps;
+
+      foreach (var dir in directions)
+      {
+        var nextRow = row + dir[0];
+        var nextCol = col + dir[1];
+        if (!valid(nextRow, nextCol)) continue;
+        if (grid[nextRow][nextCol] == 0)
+        {
+          if (seen[nextRow][nextCol][remain]) continue;
+          seen[nextRow][nextCol][remain] = true;
+          queue.Enqueue(new State(nextRow, nextCol, remain, steps + 1));
+        }
+        else if (remain > 0 && !seen[nextRow][nextCol][remain - 1])
+        {
+          seen[nextRow][nextCol][remain - 1] = true;
+          queue.Enqueue(new State(nextRow, nextCol, remain - 1, steps + 1));
+        }
+      }
+    }
+    return -1;
+  }
+
+  public bool valid(int row, int col)
+  {
+    return row >= 0 && row < rowL && col >= 0 && col < colL;
+  }
+
+  
+  public class State {
+    public int row;
+    public int col;
+    public int remain;
+    public int steps;
+    public State(int _row, int _col, int _remain, int _steps)
+    {
+      this.row = _row;
+      this.col = _col;
+      this.remain = _remain;
+      this.steps = _steps;
     }
   }
 }
