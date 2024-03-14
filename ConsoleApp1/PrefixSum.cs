@@ -24,4 +24,26 @@
       
     return startValue;
   }
+  
+  public int NumSubarraysWithSum(int[] nums, int goal) {
+    var total = 0;
+    var curr = 0;
+    var freq = new Dictionary<int, int>();
+
+    for (var i = 0; i < nums.Length; i++)
+    {
+      curr += nums[i];
+      if (curr == goal)
+      {
+        total++;
+      }
+      if (freq.ContainsKey(curr - goal))
+      {
+        total += freq[curr - goal];
+      }
+      freq.TryGetValue(curr, out int newVal);
+      freq[curr] = newVal + 1;
+    }
+    return total;
+  }
 }
