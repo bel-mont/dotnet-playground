@@ -513,3 +513,73 @@ public class Leetcode1129 {
   }
 }
 
+public class Leetcode1926 {
+  public int rowL;
+  public int colL;
+  public int[][] directions = new int[][]
+  {
+    new int[]{0, 1}, new int[]{ 1, 0}, new int[]{0, -1}, new int[]{-1, 0}
+  };
+
+  public int NearestExit(char[][] maze, int[] entrance) {
+    // the graph is already built
+    rowL = maze.Length;
+    colL = maze[0].Length;
+    // graph BFS, start from entrance
+    var queue = new Queue<State>();
+    queue.Enqueue(new State(entrance[0], entrance[1], 0));
+    var seen = new bool[rowL][];
+    for (var i = 0; i < rowL; i++) seen[i] = new bool[colL];
+    seen[entrance[0]][entrance[1]] = true;
+    // find nearest empty node at edge
+    while (queue.Count > 0)
+    {
+      var state = queue.Dequeue();
+      var row = state.row;
+      var col = state.col;
+      var steps = state.steps;
+
+      foreach (var dir in directions)
+      {
+        var nextRow = dir[0] + row;
+        var nextCol = dir[1] + col;
+        if (isExit(row, col, nextRow, nextCol, maze, entrance)) return steps;
+        if (!isValid(nextRow, nextCol, maze) || seen[nextRow][nextCol]) continue; 
+        seen[nextRow][nextCol] = true;
+        queue.Enqueue(new State(nextRow, nextCol, steps + 1));
+      }
+    }
+    return -1;
+  }
+
+  public bool isValid(int row, int col, char[][] maze)
+  {
+    return row >= 0 && row < rowL && col >= 0 && col < colL && maze[row][col] == '.';
+  }
+
+  public bool isExit(int row, int col, int nextRow, int nextCol, char[][] maze, int[] entrance)
+  {
+    return maze[row][col] == '.'
+           && !isEntrance(row, col, entrance)
+           && (nextRow < 0 || nextRow == rowL || nextCol < 0 || nextCol == colL);
+  }
+
+  public bool isEntrance(int row, int col, int[] entrance)
+  {
+    return entrance[0] == row && entrance[1] == col;
+  }
+
+  public class State 
+  {
+    public int row;
+    public int col;
+    public int steps;
+    public State(int _row, int _col, int _steps)
+    {
+      this.row = _row;
+      this.col = _col;
+      this.steps = _steps;
+    }
+  }
+}
+
