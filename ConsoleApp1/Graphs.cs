@@ -603,9 +603,9 @@ public class Leetcode752 {
         var node = pair.node;
         var steps = pair.steps;
         if (node == target) return steps;
-        foreach (var neighbor in Neighbors(node))
+        var neighbors = Neighbors(node).Where(neighbor => !seen.Contains(neighbor));
+        foreach (var neighbor in neighbors)
         {
-          if (seen.Contains(neighbor)) continue;
           seen.Add(neighbor);
           queue.Enqueue(new Pair(neighbor, steps + 1));
         }
@@ -639,4 +639,70 @@ public class Leetcode752 {
         steps = _steps;
       }
     }
+}
+
+public class Leetcode399 {
+  Dictionary<string, Dictionary<string, double>> graph = new Dictionary<string, Dictionary<string, double>>();
+  public double[] CalcEquation(IList<IList<string>> equations, double[] values, IList<IList<string>> queries)
+  {
+    for (var i = 0; i < equations.Count; i++)
+    {
+      var numerator = equations[i][0];
+      var denominator = equations[i][1];
+      double val = values[i];
+
+      if (!graph.ContainsKey(numerator)) graph[numerator] = new Dictionary<string, double>();
+      if (!graph.ContainsKey(denominator)) graph[denominator] = new Dictionary<string, double>();
+      
+      graph[numerator].Add(denominator, val);
+      graph[denominator].Add(numerator, 1 / val);
+    }
+
+    var ans = new double[queries.Count];
+    for (var i = 0; i < queries.Count; i++)
+    {
+      ans[i] = AnswerQuery(queries[i][0], queries[i][1]);
+    }
+
+    return ans;
+  }
+
+  public double AnswerQuery(string start, string end)
+  {
+    if (!graph.ContainsKey(start)) return -1;
+
+    var seen = new HashSet<string>();
+    var stack = new Stack<Pair>();
+    seen.Add(start);
+    stack.Push(new Pair(start, 1));
+
+    while (stack.Count > 0)
+    {
+      var pair = stack.Pop();
+      var node = pair.node;
+      var ratio = pair.ratio;
+      if (node == end) return ratio;
+
+      if (!graph.ContainsKey(node)) continue;
+      foreach (var neighbor in graph[node].Keys)
+      {
+        if (seen.Contains(neighbor)) continue;
+        seen.Add(neighbor);
+        stack.Push(new Pair(neighbor, ratio * graph[node][neighbor]));
+      }
+    }
+
+    return -1;
+  }
+
+  class Pair
+  {
+    public string node;
+    public double ratio;
+    public Pair(string _node, double _ratio)
+    {
+      node = _node;
+      ratio = _ratio;
+    }
+  }
 }
