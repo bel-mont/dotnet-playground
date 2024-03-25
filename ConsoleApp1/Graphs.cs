@@ -583,3 +583,60 @@ public class Leetcode1926 {
   }
 }
 
+public class Leetcode752 {
+    public int OpenLock(string[] deadends, string target) {
+      var queue = new Queue<Pair>();
+      var seen = new HashSet<string>();
+
+      foreach (var s in deadends)
+      {
+        if (s == "0000") return -1;
+        seen.Add(s);
+      }
+
+      queue.Enqueue(new Pair("0000", 0));
+      seen.Add("0000");
+
+      while (queue.Count > 0)
+      {
+        var pair = queue.Dequeue();
+        var node = pair.node;
+        var steps = pair.steps;
+        if (node == target) return steps;
+        foreach (var neighbor in Neighbors(node))
+        {
+          if (seen.Contains(neighbor)) continue;
+          seen.Add(neighbor);
+          queue.Enqueue(new Pair(neighbor, steps + 1));
+        }
+      }
+      return -1;
+    }
+
+    public List<string> Neighbors(string node)
+    {
+      var ans = new List<string>();
+      for (var i = 0; i < 4; i++)
+      {
+        var num = node[i] - '0';
+        var changes = new int[]{-1, 1};
+        foreach (var ch in changes)
+        {
+          var x = (num + ch + 10) % 10;
+          ans.Add(node[..i] + x + node[(i + 1)..]);
+        }
+      }
+      return ans;
+    }
+
+    public class Pair
+    {
+      public string node;
+      public int steps;
+      public Pair(string _node, int _steps)
+      {
+        node = _node;
+        steps = _steps;
+      }
+    }
+}
