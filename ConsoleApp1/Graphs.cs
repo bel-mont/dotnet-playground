@@ -707,3 +707,58 @@ public class Leetcode399 {
     }
   }
 }
+
+public class Leetcode433 {
+  public char[] geneMutations = { 'A', 'C', 'G', 'T'};
+  public int MinMutation(string startGene, string endGene, string[] bank) {
+    var bankSet = new HashSet<string>();
+    var seen = new HashSet<string>();
+    foreach (var s in bank) bankSet.Add(s);
+    var queue = new Queue<State>();
+    queue.Enqueue(new State(startGene, 0));
+    seen.Add(startGene);
+
+    while (queue.Count > 0)
+    {
+      var state = queue.Dequeue();
+      var node = state.node;
+      var steps = state.steps;
+      if (node == endGene) return steps;
+      foreach (var neighbor in Neighbors(node, bankSet, seen))
+      {
+        if (seen.Contains(neighbor)) continue;
+        seen.Add(neighbor);
+        queue.Enqueue(new State(neighbor, steps + 1));
+      }
+    }
+    
+    return -1;
+  }
+
+  public List<string> Neighbors(string node, HashSet<string> bankSet, HashSet<string> seen)
+  {
+    var ans = new List<string>();
+    for (var i = 0; i < node.Length; i++)
+    {
+      var currentGene = node[i];
+      foreach (var ch in geneMutations)
+      {
+        if (ch == currentGene) continue;
+        var mutation = node[..i] + ch + node[(i + 1)..];
+        if (bankSet.Contains(mutation)) ans.Add(mutation);
+      }
+    }
+    return ans;
+  }
+
+  public class State
+  {
+    public string node;
+    public int steps;
+    public State(string _node, int _steps)
+    {
+      node = _node;
+      steps = _steps;
+    }
+  }
+}
