@@ -645,11 +645,12 @@ public class Leetcode399 {
   Dictionary<string, Dictionary<string, double>> graph = new Dictionary<string, Dictionary<string, double>>();
   public double[] CalcEquation(IList<IList<string>> equations, double[] values, IList<IList<string>> queries)
   {
+    // Build the graph first
     for (var i = 0; i < equations.Count; i++)
     {
       var numerator = equations[i][0];
       var denominator = equations[i][1];
-      double val = values[i];
+      var val = values[i];
 
       if (!graph.ContainsKey(numerator)) graph[numerator] = new Dictionary<string, double>();
       if (!graph.ContainsKey(denominator)) graph[denominator] = new Dictionary<string, double>();
@@ -684,9 +685,9 @@ public class Leetcode399 {
       if (node == end) return ratio;
 
       if (!graph.ContainsKey(node)) continue;
-      foreach (var neighbor in graph[node].Keys)
+      var neighbors = graph[node].Keys.Where(neighbor => !seen.Contains(neighbor));
+      foreach (var neighbor in neighbors)
       {
-        if (seen.Contains(neighbor)) continue;
         seen.Add(neighbor);
         stack.Push(new Pair(neighbor, ratio * graph[node][neighbor]));
       }
