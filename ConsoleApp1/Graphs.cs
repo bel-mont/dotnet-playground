@@ -762,3 +762,61 @@ public class Leetcode433 {
     }
   }
 }
+
+public class Leetcode1306 {
+  public bool CanReach(int[] arr, int start) {
+    // bfs and dfs should be the same I guess? let's try both
+    var queue = new Queue<int>(); // store indexes
+    queue.Enqueue(start);
+    var seen = new HashSet<int>();
+    
+    while (queue.Count > 0)
+    {
+      var curr = queue.Dequeue();
+      seen.Add(curr);
+      if (arr[curr] == 0) return true;
+      var nextUpper = curr + arr[curr]; // 5+1(6)
+      var nextLower = curr - arr[curr]; // 5-1(4)
+      if (nextUpper < arr.Length  && !seen.Contains(nextUpper)) queue.Enqueue(nextUpper);
+      if (nextLower >= 0 && !seen.Contains(nextLower)) queue.Enqueue(nextLower);
+    }
+
+    return false;
+  }
+
+  public bool canReachIterativeDFS(int[] arr, int start) {
+    Stack<int> stack = new Stack<int>();
+    stack.Push(start);
+    bool[] seen = new bool[arr.Length]; // Tracks visited indices
+
+    while (stack.Count > 0) {
+      int curr = stack.Pop();
+
+      // Check bounds and if already visited
+      if (curr < 0 || curr >= arr.Length || seen[curr]) {
+        continue;
+      }
+
+      // Found the target
+      if (arr[curr] == 0) {
+        return true;
+      }
+
+      // Mark the current index as visited
+      seen[curr] = true;
+
+      // Push next positions to check
+      int nextUpper = curr + arr[curr];
+      int nextLower = curr - arr[curr];
+
+      if (nextUpper < arr.Length) {
+        stack.Push(nextUpper);
+      }
+      if (nextLower >= 0) {
+        stack.Push(nextLower);
+      }
+    }
+
+    return false; // No path to a zero value was found
+  }
+}
