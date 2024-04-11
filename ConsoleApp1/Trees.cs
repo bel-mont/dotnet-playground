@@ -146,3 +146,40 @@ public class Leetcode1325 {
     return root;
   }
 }
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Leetcode637 {
+  public IList<double> AverageOfLevels(TreeNode root) {
+    // BFS
+    var answer = new List<double>();
+    var queue = new Queue<TreeNode>();
+    queue.Enqueue(root);
+    while (queue.Count > 0)
+    {
+      var levelSize = queue.Count;
+      double levelSum = 0;
+      for (var i = 0; i < levelSize; i++)
+      {
+        var node = queue.Dequeue();
+        levelSum += node.Val;
+        if (node.Left != null) queue.Enqueue(node.Left);
+        if (node.Right != null) queue.Enqueue(node.Right);
+      }
+      answer.Add(levelSum / levelSize);
+    }
+
+    return answer;
+  }
+}
