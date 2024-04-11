@@ -820,3 +820,67 @@ public class Leetcode1306 {
     return false; // No path to a zero value was found
   }
 }
+
+public class Leetcode127 {
+  
+  public char[] transformChar = new char[] 
+  { 
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 
+    'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+    'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+    'y', 'z'
+  };
+  public int LadderLength(string beginWord, string endWord, IList<string> wordList) {
+// This is the same as the the gene mutation problem, which is in turn
+// very similar to the "open the lock" one.
+    var wordListSet = new HashSet<string>();
+    var seen = new HashSet<string>();
+    foreach (var s in wordList) wordListSet.Add(s);
+    var queue = new Queue<State>();
+    queue.Enqueue(new State(beginWord, 1));
+    seen.Add(beginWord);
+
+    while (queue.Count > 0)
+    {
+      var state = queue.Dequeue();
+      var node = state.node;
+      var steps = state.steps;
+      if (node == endWord) return steps;
+      foreach (var neighbor in Neighbors(node, wordListSet, seen))
+      {
+        if (seen.Contains(neighbor)) continue;
+        seen.Add(neighbor);
+        queue.Enqueue(new State(neighbor, steps + 1));
+      }
+    }
+  
+    return 0;
+  }
+
+  public List<string> Neighbors(string node, HashSet<string> wordListSet, HashSet<string> seen)
+  {
+    var ans = new List<string>();
+    for (var i = 0; i < node.Length; i++)
+    {
+      var currentGene = node[i];
+      foreach (var ch in transformChar)
+      {
+        if (ch == currentGene) continue;
+        var mutation = node.Substring(0, i) + ch + node.Substring(i + 1);
+        if (wordListSet.Contains(mutation)) ans.Add(mutation);
+      }
+    }
+    return ans;
+  }
+
+  public class State
+  {
+    public string node;
+    public int steps;
+    public State(string _node, int _steps)
+    {
+      node = _node;
+      steps = _steps;
+    }
+  }
+}
