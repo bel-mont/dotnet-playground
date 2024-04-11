@@ -183,3 +183,52 @@ public class Leetcode637 {
     return answer;
   }
 }
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Leetcode1609 {
+  public bool IsEvenOddTree(TreeNode root) {
+    // BFS
+    var queue = new Queue<TreeNode>();
+    queue.Enqueue(root);
+    var level = 0;
+    while (queue.Count > 0)
+    {
+      var levelSize = queue.Count;
+      var isEvenLevel = level % 2 == 0;
+      int? prevVal = null;
+      for (var i = 0; i < levelSize; i++)
+      {
+        var node = queue.Dequeue();
+        // If we are at an even level with an even number, return false
+        if (isEvenLevel && node.Val % 2 == 0) return false;
+        // If we are at an odd level with an odd value, return false
+        if (!isEvenLevel && node.Val % 2 != 0) return false;
+
+        if (prevVal.HasValue)
+        {
+          // odd levels require even numbers in descending order
+          if (!isEvenLevel && prevVal.Value <= node.Val) return false;
+          // even levels require odd numbers in ascending order
+          else if (isEvenLevel && prevVal.Value >= node.Val) return false;
+        }
+        prevVal = node.Val;
+        if (node.Left != null) queue.Enqueue(node.Left);
+        if (node.Right != null) queue.Enqueue(node.Right);
+      }
+      level++;
+    }
+    return true;
+  }
+}
