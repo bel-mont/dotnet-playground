@@ -39,3 +39,41 @@ public class TreeNode
 
   // Add constructor, methods if needed
 }
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Leetcode102 {
+  public IList<IList<int>> LevelOrder(TreeNode root) {
+    var answer = new List<IList<int>>();
+    if (root == null) return answer;
+    // BFS
+    var queue = new Queue<TreeNode>();
+    queue.Enqueue(root);
+    while (queue.Count > 0)
+    {
+      var currentLevel = queue.Count;
+      var levelList = new List<int>();
+      for (var i = 0; i < currentLevel; i++)
+      {
+        var node = queue.Dequeue();
+        levelList.Add(node.Val);
+        if (node.Left != null) queue.Enqueue(node.Left);
+        if (node.Right != null) queue.Enqueue(node.Right);
+      }
+      answer.Add(levelList);
+    }
+
+    return answer;
+  }
+}
