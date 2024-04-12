@@ -232,3 +232,16 @@ public class Leetcode1609 {
     return true;
   }
 }
+
+public class Leetcode700 {
+  public TreeNode SearchBST(TreeNode root, int val) {
+    // DFS
+    if (root == null) return null;
+    if (root.Val == val) return root;
+    var left = SearchBST(root.Left, val);
+    if (left != null) return left;
+    var right = SearchBST(root.Right, val);
+    if (right != null) return right;
+    return null;
+  }
+}
