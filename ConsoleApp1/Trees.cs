@@ -245,3 +245,32 @@ public class Leetcode700 {
     return null;
   }
 }
+
+public class Leetcode113 {
+  public List<IList<int>> result = new List<IList<int>>();
+
+  public IList<IList<int>> PathSum(TreeNode root, int targetSum) {
+    Dfs(root, targetSum, 0, new List<int>());
+    return result;
+  }
+
+  public void Dfs(TreeNode root, int targetSum, int curr, IList<int> path)
+  {
+    if (root == null) return;
+    curr += root.Val;
+    path.Add(root.Val);
+    // we are at a leaf
+    if (root.Left == null && root.Right == null)
+    {
+      // if we have reached our sum, we can return our path + the current root if
+      if (curr == targetSum) result.Add(new List<int>(path)); // Copy the list to prevent it from being changed in another DFS call
+      // Remove the last item after we stop using it, to avoid an incorrect answer.
+      path.RemoveAt(path.Count - 1);
+      return;
+    }
+    Dfs(root.Left, targetSum, curr, path);
+    Dfs(root.Right, targetSum, curr, path);
+    // Remove any intermediary node after we are done with it.
+    path.RemoveAt(path.Count - 1);
+  }
+}
