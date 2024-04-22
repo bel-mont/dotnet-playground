@@ -274,3 +274,26 @@ public class Leetcode113 {
     path.RemoveAt(path.Count - 1);
   }
 }
+
+public class Leetcode1305 {
+  public IList<int> GetAllElements(TreeNode root1, TreeNode root2) {
+    var list1 = new List<int>();
+    var list2 = new List<int>();
+    Dfs(root1, list1);
+    Dfs(root2, list1);
+    // merge
+
+    var ans = list1.Concat(list2).ToList();
+    // sort
+    ans.Sort();
+    return ans;
+  }
+
+  public void Dfs(TreeNode root, List<int> list)
+  {
+    if (root == null) return;
+    Dfs(root.Left, list);
+    list.Add(root.Val);
+    Dfs(root.Right, list);
+  }
+}
