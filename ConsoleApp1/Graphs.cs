@@ -884,3 +884,30 @@ public class Leetcode127 {
     }
   }
 }
+
+public class Leetcode997 {
+  public int FindJudge(int n, int[][] trust) {
+    var trustCount = new int[n + 1]; // how many index i trusts
+    var trustedCount = new int[n + 1]; // how many trust index i
+    foreach (var pair in trust)
+    {
+      var trustVal = pair[0];
+      var trustedVal = pair[1];
+      trustCount[trustVal]++;
+      trustedCount[trustedVal]++;
+    }
+    
+    var ans = -1;
+    var zeroTrustIndexesCount = 0;
+    for (var i = 0; i < n; i++)
+    {
+      if (zeroTrustIndexesCount > 1) return -1;
+      if (trustedCount[i + 1] == n -1 && trustCount[i + 1] == 0)
+      {
+        ans = i + 1;
+        zeroTrustIndexesCount++;
+      }
+    }
+    return ans;
+  }
+}
