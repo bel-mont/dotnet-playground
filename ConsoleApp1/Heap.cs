@@ -94,3 +94,30 @@ public class Leetcode295
         return (minHeap.Peek() + maxHeap.Peek()) / 2.0;
     }
 }
+
+public class Leetcode1962
+{
+    public int MinStoneSum(int[] piles, int k)
+    {
+        // take the biggest number, halve it, and put it back in the piles until k == 0
+        // seems like a maxHeap problem
+        var sum = 0;
+        var heap = new PriorityQueue<int, int>(new MaxHeapComparer());
+        foreach (var p in piles)
+        {
+            heap.Enqueue(p, p);
+            sum += p;
+        }
+
+        while (k > 0)
+        {
+            var max = heap.Dequeue();
+            var half = (int)Math.Ceiling((double)max / 2.0);
+            sum -= max - half;
+            heap.Enqueue(half, half);
+            k--;
+        }
+
+        return sum;
+    }
+}
