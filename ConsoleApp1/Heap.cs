@@ -121,3 +121,27 @@ public class Leetcode1962
         return sum;
     }
 }
+
+public class Leetcode1167 {
+    public int ConnectSticks(int[] sticks) {
+        // a minHeap priority queue to pull 2 numbers, add them,
+        // sum that value into an answer, and return the total when we have 1 stick left
+        var minHeap = new PriorityQueue<int, int>();
+        foreach (var s in sticks)
+        {
+            minHeap.Enqueue(s, s);
+        }
+        var ans = 0;
+
+        while (minHeap.Count > 1)
+        {
+            var first = minHeap.Dequeue();
+            var second = minHeap.Dequeue();
+            var combinedStick = first + second;
+            ans += combinedStick;
+            minHeap.Enqueue(combinedStick, combinedStick);
+        }
+
+        return ans;
+    }
+}
