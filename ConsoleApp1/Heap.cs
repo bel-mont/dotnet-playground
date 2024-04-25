@@ -1,4 +1,5 @@
 ﻿namespace ConsoleApp1;
+
 class MaxHeapComparer : IComparer<int>
 {
     public int Compare(int x, int y)
@@ -7,9 +8,10 @@ class MaxHeapComparer : IComparer<int>
     }
 }
 
-
-public class Leetcode1046 {
-    public int LastStoneWeight(int[] stones) {
+public class Leetcode1046
+{
+    public int LastStoneWeight(int[] stones)
+    {
         var heap = new PriorityQueue<int, int>(new MaxHeapComparer());
         foreach (var s in stones)
         {
@@ -22,12 +24,15 @@ public class Leetcode1046 {
             var second = heap.Dequeue();
             if (first != second) heap.Enqueue(first - second, first - second);
         }
+
         return heap.Count == 0 ? 0 : heap.Dequeue();
     }
 }
 
-public class Leetcode2208 {
-    public int HalveArray(int[] nums) {
+public class Leetcode2208
+{
+    public int HalveArray(int[] nums)
+    {
         double target = 0;
         var heap = new PriorityQueue<double, double>(new MaxHeapComparerDouble());
         foreach (var n in nums)
@@ -47,6 +52,7 @@ public class Leetcode2208 {
             target -= half;
             heap.Enqueue(half, half);
         }
+
         return ans;
     }
 
@@ -56,5 +62,35 @@ public class Leetcode2208 {
         {
             return y.CompareTo(x);
         }
+    }
+}
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder obj = new MedianFinder();
+ * obj.AddNum(num);
+ * double param_2 = obj.FindMedian();
+ */
+public class Leetcode295
+{
+    private PriorityQueue<int, int> minHeap = new PriorityQueue<int, int>();
+    private PriorityQueue<int, int> maxHeap = new PriorityQueue<int, int>(new MaxHeapComparer());
+
+    public void AddNum(int num)
+    {
+        maxHeap.Enqueue(num, num);
+        var max = maxHeap.Dequeue();
+        minHeap.Enqueue(max, max);
+        if (minHeap.Count > maxHeap.Count)
+        {
+            var min = minHeap.Dequeue();
+            maxHeap.Enqueue(min, min);
+        }
+    }
+
+    public double FindMedian()
+    {
+        if (maxHeap.Count > minHeap.Count) return maxHeap.Peek();
+        return (minHeap.Peek() + maxHeap.Peek()) / 2.0;
     }
 }
