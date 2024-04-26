@@ -145,3 +145,26 @@ public class Leetcode1167 {
         return ans;
     }
 }
+
+public class Leetcode347 {
+    public int[] TopKFrequent(int[] nums, int k) {
+        var frequency = new Dictionary<int, int>();
+        foreach (var n in nums)
+        {
+            frequency.TryGetValue(n, out var count);
+            frequency[n] = count + 1;
+        }
+
+        var heap = new PriorityQueue<int, int>();
+        foreach (var pair in frequency)
+        {
+            heap.Enqueue(pair.Key, pair.Value);
+            if (heap.Count > k) heap.Dequeue();
+        }
+
+        var ans = new int[k];
+        for (var i = 0; i < k; i++) ans[i] = heap.Dequeue();
+
+        return ans;
+    }
+}
