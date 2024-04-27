@@ -12,6 +12,13 @@ public class Leetcode1046
 {
     public int LastStoneWeight(int[] stones)
     {
+        var comparer = Comparer<(int difference, int val)>.Create((x, y) =>
+        {
+            // if the differences are the same, return the smallest value
+            if (x.difference == y.difference) return x.val.CompareTo(y.val);
+            // otherwise, return the difference
+            return x.difference.CompareTo(y.difference);
+        });
         var heap = new PriorityQueue<int, int>(new MaxHeapComparer());
         foreach (var s in stones)
         {
@@ -166,5 +173,31 @@ public class Leetcode347 {
         for (var i = 0; i < k; i++) ans[i] = heap.Dequeue();
 
         return ans;
+    }
+}
+public class Leetcode658 {
+    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+        var comparer = Comparer<(int Difference, int Val)>.Create((x, y) =>
+        {
+            if (x.Difference == y.Difference) return y.Val.CompareTo(x.Val);
+            return y.Difference.CompareTo(x.Difference);
+        });
+
+        var heap = new PriorityQueue<(int Difference, int Val), (int Difference, int Val)>(comparer);
+        foreach (var n in arr)
+        {
+            var entry = (Math.Abs(x - n), n);
+            heap.Enqueue(entry, entry);
+            if (heap.Count > k) heap.Dequeue(); 
+        }
+
+        var ans = new List<int>();
+        while (heap.Count > 0)
+        {
+            ans.Add(heap.Dequeue().Val);
+        }
+        ans.Sort();
+        return ans;
+
     }
 }
