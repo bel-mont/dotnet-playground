@@ -201,3 +201,21 @@ public class Leetcode658 {
 
     }
 }
+
+public class Leetcode215 {
+    public int FindKthLargest(int[] nums, int k) {
+        // put items in a maxHeap, dequeue if we go past k items
+        var maxHeapComparer = Comparer<int>.Create((item1, item2) => item1.CompareTo(item2));
+        var heap = new PriorityQueue<int, int>(maxHeapComparer);
+
+        foreach (var n in nums)
+        {
+            heap.Enqueue(n, n);
+            // if we have more than k items, remove one to keep only the largest ones
+            if (heap.Count > k) heap.Dequeue();
+        }
+
+        // return the k item
+        return heap.Dequeue();
+    }
+}
