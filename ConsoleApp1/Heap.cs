@@ -183,18 +183,18 @@ public class Leetcode658 {
             return y.Difference.CompareTo(x.Difference);
         });
 
-        var heap = new PriorityQueue<(int Difference, int Val), (int Difference, int Val)>(comparer);
+        var heap = new PriorityQueue<int, (int Difference, int Val)>(comparer);
         foreach (var n in arr)
         {
             var entry = (Math.Abs(x - n), n);
-            heap.Enqueue(entry, entry);
+            heap.Enqueue(n, entry);
             if (heap.Count > k) heap.Dequeue(); 
         }
 
         var ans = new List<int>();
         while (heap.Count > 0)
         {
-            ans.Add(heap.Dequeue().Val);
+            ans.Add(heap.Dequeue());
         }
         ans.Sort();
         return ans;
@@ -217,5 +217,32 @@ public class Leetcode215 {
 
         // return the k item
         return heap.Dequeue();
+    }
+}
+
+
+public class Leetcode973 {
+    public int[][] KClosest(int[][] points, int k) {
+        // The distance between two points on the X-Y plane is the Euclidean distance
+        // (i.e., √(x1 - x2)2 + (y1 - y2)2).
+    
+        // try a maxHeap to remove any big items beyond k items
+        // the weight should be based on the above formula
+        var comparer = Comparer<double>.Create((item1, item2) => item2.CompareTo(item1));
+        var heap = new PriorityQueue<int[], double>(comparer);
+        foreach (var p in points)
+        {
+            var difference = CalculateDistance(p[0], p[1], 0, 0);
+            heap.Enqueue(p, difference);
+            if (heap.Count > k) heap.Dequeue();
+        }
+        var ans = new int[k][];
+        for (var i = 0; i < k; i++) ans[i] = heap.Dequeue();
+        return ans;
+    }
+
+    double CalculateDistance(double x1, double y1, double x2, double y2)
+    {
+        return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
     }
 }
