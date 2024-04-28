@@ -272,3 +272,49 @@ public class KthLargest {
  * KthLargest obj = new KthLargest(k, nums);
  * int param_1 = obj.Add(val);
  */
+
+public class Leetcode692 {
+  public IList<string> TopKFrequent(string[] words, int k) {
+    // count word frequency, then maxHeap to remove the least frequent.
+    var frequency = new Dictionary<string, int>();
+    foreach (var s in words)
+    {
+      frequency.TryGetValue(s, out int count);
+      frequency[s] = count + 1;
+    }
+    // Note the use of 2 comparers, and how they sort of "combine" the min/max heap by doing 2 different
+    // potential comparisons. These 2 comparisons must be reverted, because we first get only K items
+    // then we take those k items and sort them through the opposite operation so they are ordered properly.
+
+    var minHeapComparer = Comparer<(int Freq, string Word)>.Create((x, y) => {
+      // if the frequency is the same, sort by word.
+      // a word comparison is already using a lexographical comparison
+      if (x.Freq == y.Freq) return y.Word.CompareTo(x.Word);
+      return x.Freq.CompareTo(y.Freq);
+    });
+    var heap = new PriorityQueue<string, (int Freq, string Word)>(minHeapComparer);
+    foreach (var pair in frequency)
+    {
+      heap.Enqueue(pair.Key, (Freq: pair.Value, Word: pair.Key));
+      if (heap.Count > k) heap.Dequeue();
+    }
+    
+    // put the leftover k items in a maxHeap to get the appropriate order
+    var maxHeapComparer = Comparer<(int Freq, string Word)>.Create((x, y) => {
+      if (x.Freq == y.Freq) return x.Word.CompareTo(y.Word); // the lexographical checker is a minHeap
+      // notice the difference here compared to the previous comparer
+      return y.Freq.CompareTo(x.Freq); // the frequency checker is a maxHeap
+    });
+    var maxHeap = new PriorityQueue<string, (int Freq, string Word)>(maxHeapComparer);
+    while (heap.Count > 0)
+    {
+      var item = heap.Dequeue();
+      maxHeap.Enqueue(item, (Freq: frequency[item], Word: item));
+    }
+    
+    var list = new List<string>();
+    // when pulling data, the smaller item is retrieved first so we need to insert in the opposite direction
+    while (maxHeap.Count > 0) list.Add(maxHeap.Dequeue());
+    return list;
+  }
+}
