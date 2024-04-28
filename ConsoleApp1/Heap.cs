@@ -318,3 +318,25 @@ public class Leetcode692 {
     return list;
   }
 }
+
+public class SeatManager {
+    private PriorityQueue<int, int> minHeap = new PriorityQueue<int, int>();
+    public SeatManager(int n) {
+        for (var i = 1; i <= n; i++) minHeap.Enqueue(i, i);
+    }
+    
+    public int Reserve() {
+        return minHeap.Dequeue();
+    }
+    
+    public void Unreserve(int seatNumber) {
+        minHeap.Enqueue(seatNumber, seatNumber);
+    }
+}
+
+/**
+ * Your SeatManager object will be instantiated and called as such:
+ * SeatManager obj = new SeatManager(n);
+ * int param_1 = obj.Reserve();
+ * obj.Unreserve(seatNumber);
+ */
