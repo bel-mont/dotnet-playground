@@ -202,10 +202,11 @@ public class Leetcode658 {
     }
 }
 
+// C#'s PrioritiQueue defaults to a minHeap. Check the priority queue md file for more information.
 public class Leetcode215 {
     public int FindKthLargest(int[] nums, int k) {
         // put items in a maxHeap, dequeue if we go past k items
-        var maxHeapComparer = Comparer<int>.Create((item1, item2) => item1.CompareTo(item2));
+        var maxHeapComparer = Comparer<int>.Create((item1, item2) => item1.CompareTo(item2)); // this comparer is not needed, remove
         var heap = new PriorityQueue<int, int>(maxHeapComparer);
 
         foreach (var n in nums)
