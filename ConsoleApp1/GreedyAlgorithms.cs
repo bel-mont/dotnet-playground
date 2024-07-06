@@ -133,7 +133,71 @@ public class Leetcode881 {
             heavyIndex--;
             ans++;
         }
-
+        
         return ans;
+    }
+}
+
+public class Leetcode1323 {
+    public int Maximum69Number (int num) {
+        var ans = num;
+
+        var chars = num.ToString();
+        for (var i = 0; i < chars.Length; i++)
+        {
+            var newArr = chars.ToCharArray();
+            newArr[i] = newArr[i] == '6' ? '9' : '6';
+            var newNumb = int.Parse(new string(newArr));
+            if (newNumb > ans) ans = newNumb;
+        }
+        return ans;
+    }
+}
+
+public class Leetcode1323Greediest {
+    public int Maximum69Number (int num) {
+        var ans = num;
+        var chars = num.ToString();
+        for (var i = 0; i < chars.Length; i++)
+        {
+            var newArr = chars.ToCharArray();
+            // there is no point in changing 9 to 6, it automatically means the number will be smaller
+            if (newArr[i] == '6')
+            {
+                newArr[i] = '9';
+                var newNumb = int.Parse(new string(newArr));
+                if (newNumb > ans) ans = newNumb;
+                // whatever the result of this comparison is, we should break out since there
+                // is no way for any other number to be bigger.
+                break;
+            }
+        }
+        return ans;
+    }
+}
+
+public class Leetcode1323GreediestWizardry {
+    public int Maximum69Number (int num) {
+        // taken from the editorial because it blew my mind
+
+        // Since we start with the lowest digit, initialize currDigit = 0.
+        var numCopy = num;
+        var indexSix = -1;
+        var currDigit = 0;
+
+        // Check every digit of 'numCopy' from low to high.
+        while (numCopy > 0)
+        {
+            // If the current digit is '6', record it as the highest digit of 6.
+            if (numCopy % 10 == 6) 
+                indexSix = currDigit;
+            // Move to next digit
+            numCopy /= 10;
+            currDigit++;
+        }
+
+        // If we don't find any digit of '6', return the original number,
+        // otherwise, increment 'num' by the difference made by the first '6'.
+        return indexSix == -1 ? num : num + 3 * (int)Math.Pow(10, indexSix);
     }
 }
