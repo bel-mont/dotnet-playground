@@ -109,3 +109,31 @@ public class Leetcode1481Alternative {
         return sortedFrequencies.Length - index;
     }
 }
+
+public class Leetcode881 {
+    public int NumRescueBoats(int[] people, int limit) {
+        // the simplest approach is pairing the lightest person with the heaviest person.
+        // if the heaviest person cannot be paired with the lightest one, it means they need their own boat.
+
+        // sort the array and then check the pairs with 2 pointers
+        Array.Sort(people);
+        var ans = 0;
+        var lightIndex = 0;
+        var heavyIndex = people.Length - 1;
+        while (lightIndex <= heavyIndex)
+        {
+            var heaviest = people[heavyIndex];
+            var lightest = people[lightIndex];
+            // if the combined weight is equal or less than the limit, we pair them both.
+            // otherwise we send the heavy person on their own
+            if (lightest + heaviest <= limit)
+            {
+                lightIndex++;
+            }
+            heavyIndex--;
+            ans++;
+        }
+
+        return ans;
+    }
+}
