@@ -44,3 +44,68 @@ public class Leetcode502 {
         return projects;
     }
 }
+
+public class Leetcode1481 {
+    public int FindLeastNumOfUniqueInts(int[] arr, int k) {
+        // store frequencies in hash map
+        // value -> frequency
+        var frequencies = new Dictionary<int, int>();
+        for (var i = 0; i < arr.Length; i++)
+        {
+            frequencies.TryGetValue(arr[i], out int count);
+            frequencies[arr[i]] = count + 1;
+        }
+    
+        // store the frequencies in an array to sort it later
+        var sortedFrequencies = new List<int>();
+        foreach (var pair in frequencies)
+        {
+            // we only care about the frequency (value of the hashmap)
+            sortedFrequencies.Add(pair.Value);
+        }
+        // sort by frequency
+        sortedFrequencies.Sort((x, y) => y.CompareTo(x)); // invert it so we can remove the last item later on
+        while (k > 0)
+        {
+            var smallestFrequency = sortedFrequencies[sortedFrequencies.Count - 1];
+            if (smallestFrequency <= k)
+            {
+                k -= smallestFrequency;
+                sortedFrequencies.RemoveAt(sortedFrequencies.Count - 1);
+            }
+            else break;
+        }
+
+        return sortedFrequencies.Count;
+    }
+}
+
+public class Leetcode1481Alternative {
+    public int FindLeastNumOfUniqueInts(int[] arr, int k) {
+        var frequencies = new Dictionary<int, int>();
+        for (var i = 0; i < arr.Length; i++) {
+            frequencies.TryGetValue(arr[i], out int count);
+            frequencies[arr[i]] = count + 1;
+        }
+        
+        var sortedFrequencies = new int[frequencies.Count][];
+        var j = 0;
+        foreach (var pair in frequencies) {
+            sortedFrequencies[j] = new int[2] { pair.Value, pair.Key };
+            j++;
+        }
+        Array.Sort(sortedFrequencies, (x, y) => x[0].CompareTo(y[0]));
+        
+        var index = 0;
+        while (index < sortedFrequencies.Length) {
+            if (sortedFrequencies[index][0] <= k) {
+                k -= sortedFrequencies[index][0];
+            } else {
+                break;
+            }
+            index++;
+        }
+        
+        return sortedFrequencies.Length - index;
+    }
+}
