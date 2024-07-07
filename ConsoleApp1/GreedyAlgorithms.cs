@@ -201,3 +201,48 @@ public class Leetcode1323GreediestWizardry {
         return indexSix == -1 ? num : num + 3 * (int)Math.Pow(10, indexSix);
     }
 }
+
+public class Leetcode1710 {
+    public int MaximumUnits(int[][] boxTypes, int truckSize) {
+        // sort the box types by the second element (the amount of units per box) in DESC order
+        Array.Sort(boxTypes, (x, y) => y[1].CompareTo(x[1])); // reverse the order to make it Desc
+        // Then loop until we run out of "truckSize"
+        var boxes = 0;
+        var units = 0;
+        var j = 0;
+        while (boxes < truckSize && j < boxTypes.Length)
+        {
+            var boxesTotal = boxTypes[j][0];
+            // loop the amount of available boxes
+            for (var i = 0; i < boxesTotal; i++)
+            {
+                // Keep track of the answer by adding the units in each iteration
+                if (boxes >= truckSize) break;
+                units += boxTypes[j][1];
+                boxes++;
+            }
+            j++;
+        }
+        return units;
+    }
+}
+
+public class Leetcode1710Better {
+    public int MaximumUnits(int[][] boxTypes, int truckSize) {
+        // sort the box types by the second element (the amount of units per box) in DESC order
+        Array.Sort(boxTypes, (x, y) => y[1].CompareTo(x[1])); // reverse the order to make it Desc
+        // Then loop until we run out of "truckSize"
+        var units = 0;
+        foreach (var box in boxTypes)
+        {
+            var boxesTotal = box[0];
+            var unitsPerBox = box[1];
+
+            var boxesToAdd = Math.Min(truckSize, boxesTotal);
+            units += boxesToAdd * unitsPerBox;
+            truckSize -= boxesToAdd;
+            if (truckSize == 0) break;
+        }
+        return units;
+    }
+}
