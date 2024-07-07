@@ -246,3 +246,18 @@ public class Leetcode1710Better {
         return units;
     }
 }
+
+public class Leetcode1196 {
+    public int MaxNumberOfApples(int[] weight) {
+        Array.Sort(weight);
+        var capacity = 5000;
+        var count = 0;
+        while (capacity > 0 && count < weight.Length)
+        {
+            if (capacity - weight[count] < 0) break;
+            capacity -= weight[count];
+            count++;
+        }
+        return count;
+    }
+}
