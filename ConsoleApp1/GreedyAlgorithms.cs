@@ -261,3 +261,25 @@ public class Leetcode1196 {
         return count;
     }
 }
+
+public class Leetcode1196Heap {
+    public int MaxNumberOfApples(int[] weight) {
+        var minHeap = new PriorityQueue<int, int>();
+        // add all weights to the heap, then take one until we run out or our capacity is 0 or less
+        for (var i = 0; i < weight.Length; i++)
+        {
+            minHeap.Enqueue(weight[i], weight[i]);
+        }
+
+        var capacity = 5000;
+        var count = 0;
+        while (capacity > 0 && minHeap.Count > 0)
+        {
+            var smallest = minHeap.Dequeue();
+            if (capacity - smallest < 0) break;
+            capacity -= smallest;
+            count++;
+        }
+        return count;
+    }
+}
