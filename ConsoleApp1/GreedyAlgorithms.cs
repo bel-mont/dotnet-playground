@@ -283,3 +283,37 @@ public class Leetcode1196Heap {
         return count;
     }
 }
+
+public class Leetcode1338 {
+    public int MinSetSize(int[] arr) {
+        // count frequencies
+        var freqs = new Dictionary<int, int>();
+        foreach (var num in arr)
+        {
+            freqs.TryGetValue(num, out int count);
+            freqs[num] = count + 1;
+        }
+        var sorted = new int[freqs.Count][];
+        var i = 0;
+        foreach (var pair in freqs)
+        {
+            sorted[i] = new int[2]{pair.Key, pair.Value};
+            i++;
+        }
+        // sort
+        Array.Sort(sorted, (x, y) => y[1].CompareTo(x[1]));
+    
+        var inputArrLengthHalved = arr.Length / 2;
+        var acumulator = 0;
+        var ans = 0;
+        // take count from largest to smallest until count > arr.Length / 2
+        for (var j = 0; j < sorted.Length; j++)
+        {
+            if (acumulator >= inputArrLengthHalved) break;
+            acumulator += sorted[j][1];
+            ans++;
+        }
+
+        return ans;
+    }
+}
