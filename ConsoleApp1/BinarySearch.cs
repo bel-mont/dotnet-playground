@@ -45,3 +45,34 @@ public class Leetcode704 {
         return -1;
     }
 }
+
+public class Leetcode2300 {
+    public int[] SuccessfulPairs(int[] spells, int[] potions, long success) {
+        Array.Sort(potions);
+        var ans = new int[spells.Length];
+
+        var pLen = potions.Length;
+
+        for (var i = 0; i < spells.Length; i++)
+        {
+            var j = binarySearch(potions, success / (double)spells[i]);
+            ans[i] = pLen - j;
+        }
+
+        return ans;
+    }
+
+    public int binarySearch(int[] arr, double target)
+    {
+        var left = 0;
+        var right = arr.Length - 1;
+        while (left <= right)
+        {
+            var mid = left + (right - left) / 2;
+            if (arr[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+
+        return left;
+    }
+}
