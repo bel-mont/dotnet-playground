@@ -12,13 +12,20 @@ public class Leetcode74 {
         while (left <= right)
         {
             var mid = left + (right - left) / 2;
+            // we can find the row by diving our current mid by the number of columns
+            // ex: in a 6 row x 3 cols matrix, on a first iteration where left = 0 and right = 18, mid = 9
+            // 9 / 3 = 3, so we are in the 3rd row
             var row = mid / cols;
+            // we can find the column by taking the remainder of the division
+            // ex: 9 % 3 = 0, so we are in the 0th column
             var col = mid % cols;
             var num = matrix[row][col];
 
             if (num == target) return true;
 
-            if (num < target) left = mid + 1;
+            // when the target is greater than our current number, we move the left pointer to the right
+            if (target > num) left = mid + 1;
+            // otherwise we move the right pointer to the left
             else right = mid - 1;
         }
 
