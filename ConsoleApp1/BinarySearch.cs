@@ -56,14 +56,24 @@ public class Leetcode704 {
 public class Leetcode2300 {
     public int[] SuccessfulPairs(int[] spells, int[] potions, long success) {
         Array.Sort(potions);
+        // the answer must contain the amount of potions that each spell can be successful with
+        // so, we must maintain the same order for our answer
         var ans = new int[spells.Length];
-
         var pLen = potions.Length;
 
         for (var i = 0; i < spells.Length; i++)
         {
-            var j = binarySearch(potions, success / (double)spells[i]);
-            ans[i] = pLen - j;
+            // given the sorted potions, do a binary search for the minimum required value
+            // for example, if our current spell is 7, and our success is 9,
+            // our minimum required value is 9 / 7 = 1.2857
+            // some issues may occur with floating point numbers, so we use double.
+            var minRequiredVal = success / (double)spells[i];
+            var insertIndex = binarySearch(potions, minRequiredVal);
+            // the index is the first element that is greater or equal to minRequiredVal
+            // so, the total amount of potions is that index - the length of the potions array
+            // ex: if the potions array is [1, 2, 3, 4, 5], and the minRequiredVal is 2.5
+            // the index is 3, and the total amount of potions is 5 - 3 = 2
+            ans[i] = pLen - insertIndex;
         }
 
         return ans;
@@ -71,15 +81,17 @@ public class Leetcode2300 {
 
     public int binarySearch(int[] arr, double target)
     {
+        // standard binary search
         var left = 0;
         var right = arr.Length - 1;
         while (left <= right)
         {
             var mid = left + (right - left) / 2;
-            if (arr[mid] < target) left = mid + 1;
+            if (target > arr[mid]) left = mid + 1;
             else right = mid - 1;
         }
-
+        // we keep going until the left pointer is greater than the right one
+        // by that point, the left one is either the correct index or the insertion point
         return left;
     }
 }
