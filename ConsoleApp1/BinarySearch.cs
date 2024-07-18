@@ -111,3 +111,43 @@ public class Leetcode35 {
         return left;
     }
 }
+
+public class Leetcode2389 {
+    public int[] AnswerQueries(int[] nums, int[] queries) {
+        var ans = new int[queries.Length];
+        // sort the nums
+        Array.Sort(nums);
+        // prefix sum them
+        var prefixSum = new int[nums.Length];
+        prefixSum[0] = nums[0];
+        for (var i = 1; i < nums.Length; i++)
+        {
+            prefixSum[i] = nums[i] + prefixSum[i - 1];
+        }
+
+        for (var i = 0; i < queries.Length; i++)
+        {
+            ans[i] = BinarySearch(prefixSum, queries[i]);
+        }
+
+        return ans;
+    }
+
+    public int BinarySearch(int[] sums, int target)
+    {
+        // if binary search finds the item, return the left index + 1
+        // if not found, return the left index
+        var left = 0;
+        var right = sums.Length - 1;
+        while (left <= right)
+        {
+            var mid = left + (right - left) / 2;
+            // mid + 1 because the "insertion" point indicates the size of the array
+            if (sums[mid] == target) return mid + 1;
+            else if (sums[mid] > target) right = mid - 1; // current mid is too big, move right pointer
+            else left = mid + 1; // too small, move left pointer
+        }
+
+        return left;
+    }
+}
