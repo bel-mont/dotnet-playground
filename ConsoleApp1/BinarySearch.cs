@@ -151,3 +151,39 @@ public class Leetcode2389 {
         return left;
     }
 }
+
+// Quite confusing...
+public class Leetcode875 {
+    public int MinEatingSpeed(int[] piles, int h) {
+        // the description is very convoluted
+        // we need to get the smallest amount of "bananas" that can be
+        // eaten per hour, such that after eating everything we are still
+        // under "h" hours. Each "eating session" takes 1 hour
+
+        // we set left to 1 because otherwise, eating "0" bananas
+        // would mean we can never finish
+        var left = 1;
+        var right = 0; // the right should be the biggest pile
+        foreach (var pile in piles)
+        {
+            right = Math.Max(right, pile);
+        }
+
+        while (left <= right)
+        {
+            var mid = left + (right - left) / 2;
+            if (Check(mid, piles, h)) right = mid - 1;
+            else left = mid + 1;
+        }
+
+        return left;
+    }
+
+    public bool Check(int k, int[] piles, int hoursLimit)
+    {
+        long hours = 0;
+        foreach (var pile in piles)
+            hours += (long)Math.Ceiling((double)pile / (double)k);
+        return hours <= hoursLimit;
+    }
+}
