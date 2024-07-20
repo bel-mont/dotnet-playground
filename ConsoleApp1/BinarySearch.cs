@@ -152,6 +152,19 @@ public class Leetcode2389 {
     }
 }
 
+/**
+ * There is a more creative way to use binary search - on a solution space/answer. A very common type of problem is "what is the max/min that something can be done". Binary search can be used if the following criteria are met:
+
+    You can quickly (in O(n)O(n) or better) verify if the task is possible for a given number x.
+    If the task is possible for a number x, and you are looking for:
+        A maximum, then it is also possible for all numbers less than x.
+        A minimum, then it is also possible for all numbers greater than x.
+    If the task is not possible for a number x, and you are looking for:
+        A maximum, then it is also impossible for all numbers greater than x.
+        A minimum, then it is also impossible for all numbers less than x.
+
+ */
+
 // Quite confusing...
 public class Leetcode875 {
     public int MinEatingSpeed(int[] piles, int h) {
@@ -160,30 +173,55 @@ public class Leetcode875 {
         // eaten per hour, such that after eating everything we are still
         // under "h" hours. Each "eating session" takes 1 hour
 
-        // we set left to 1 because otherwise, eating "0" bananas
-        // would mean we can never finish
+        /// Initialize the left boundary of binary search to 1
+        // (minimum possible eating speed)
         var left = 1;
-        var right = 0; // the right should be the biggest pile
+    
+        // Initialize the right boundary of binary search to 0
+        // (this will be updated to the maximum value in the piles array)
+        var right = 0;
+    
+        // Find the maximum pile size to set as the initial right boundary
         foreach (var pile in piles)
         {
             right = Math.Max(right, pile);
         }
 
+        // Perform binary search
         while (left <= right)
         {
+            // Calculate the midpoint of the current search range
             var mid = left + (right - left) / 2;
-            if (Check(mid, piles, h)) right = mid - 1;
-            else left = mid + 1;
+      
+            // Check if Koko can finish eating all bananas at speed 'mid' within 'h' hours
+            if (Check(mid, piles, h)) {
+                // If feasible, try a smaller speed by moving the right boundary to 'mid - 1'
+                right = mid - 1;
+            } else {
+                // If not feasible, try a larger speed by moving the left boundary to 'mid + 1'
+                left = mid + 1;
+            }
         }
 
+        // After the loop, 'left' will be the minimum feasible eating speed
         return left;
     }
 
+    
+    // Helper method to check if Koko can finish all bananas at speed 'k' within 'hoursLimit'
     public bool Check(int k, int[] piles, int hoursLimit)
     {
+        // Initialize total hours required to 0
         long hours = 0;
-        foreach (var pile in piles)
-            hours += (long)Math.Ceiling((double)pile / (double)k);
+    
+        // Calculate the total hours required for each pile
+        foreach (var pile in piles) {
+            // For each pile, calculate the hours needed at speed 'k' and add to the total
+            // Math.Ceiling is used to round up since even a partial pile takes an additional hour
+            hours += (long)Math.Ceiling(pile / (double)k);
+        }
+    
+        // Return true if total hours required is less than or equal to hours limit
         return hours <= hoursLimit;
     }
 }
