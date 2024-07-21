@@ -375,3 +375,47 @@ public class Leetcode1870 {
         return hours <= hoursLimit;
     }
 }
+
+public class Leetcode1283 {
+    public int SmallestDivisor(int[] nums, int threshold) {
+        // Initialize the search range
+        var left = 1; // Minimum possible divisor
+        var right = 0; // Will be set to maximum number in nums
+
+        // Find the maximum number in nums to set the upper bound of search range
+        foreach (var n in nums) right = Math.Max(right, n);
+
+        // Binary search to find the smallest divisor
+        while (left <= right) // O(log k), where k is the range of possible divisors
+        {
+            // Calculate the middle point of the current range
+            var mid = left + (right - left) / 2;
+
+            // Check if the current divisor (mid) is valid
+            if (IsValid(nums, mid, threshold))
+                right = mid - 1; // If valid, try a smaller divisor
+            else
+                left = mid + 1; // If not valid, try a larger divisor
+        }
+
+        // The smallest valid divisor is found when left > right
+        return left;
+    }
+
+    // Helper method to check if a given divisor is valid
+    // O(n), where n is the length of nums array
+    public bool IsValid(int[] nums, int mid, int threshold)
+    {
+        var sum = 0;
+        foreach (var d in nums)
+        {
+            // Calculate the result of division and round up
+            sum += (int)Math.Ceiling((double)d / mid);
+            
+            // If the sum exceeds the threshold, the divisor is not valid
+            if (sum > threshold) return false;
+        }
+        // If we've processed all numbers and sum <= threshold, the divisor is valid
+        return true;
+    }
+}
