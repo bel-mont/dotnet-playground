@@ -225,3 +225,99 @@ public class Leetcode875 {
         return hours <= hoursLimit;
     }
 }
+
+public class Leetcode1631 {
+  // Number of rows and columns in the heights matrix
+  int Rows;
+  int Cols;
+  // Directions array for moving right, down, left, and up
+  int[][] Directions = 
+      {new int[] {0, 1}, new int[] {1, 0}, new int[] {0, -1}, new int[] {-1, 0}};
+
+  // Main function to find the minimum effort path
+  public int MinimumEffortPath(int[][] heights) {
+    // Initialize rows and columns based on the input matrix
+    Rows = heights.Length;
+    Cols = heights[0].Length;
+
+    // Define the search space for the binary search
+    var left = 0;
+    var right = 0;
+
+    // Find the maximum value in the matrix to set the upper bound of the binary search
+    foreach (var row in heights)
+      foreach(var val in row)
+        right = Math.Max(val, right);
+
+    // Binary search loop to find the minimum effort
+    while (left <= right)
+    {
+      // Calculate the middle value of the current search space
+      var mid = left + (right - left) / 2;
+      // Perform a depth-first search (DFS) to check if a path with the current mid value is feasible
+      if (Check(mid, heights)) 
+        right = mid - 1; // If feasible, decrease the upper bound
+      else 
+        left = mid + 1;  // If not feasible, increase the lower bound
+    }
+
+    // Return the minimum effort required
+    return left;
+  }
+
+  // Function to check if a path exists with the given effort
+  public bool Check(int effort, int[][] heights)
+  {
+    // Boolean matrix to mark visited cells
+    var seen = new bool[Rows, Cols];
+    // Stack for iterative DFS
+    var stack = new Stack<Pair>();
+    // Mark the starting cell as seen and push it onto the stack
+    seen[0, 0] = true;
+    stack.Push(new Pair(0, 0));
+
+    // DFS loop
+    while (stack.Count > 0)
+    {
+      // Pop the top cell from the stack
+      var pair = stack.Pop();
+      var row = pair.Row;
+      var col = pair.Col;
+      // If we reach the bottom-right cell, return true
+      if (row == Rows - 1 && col == Cols - 1) return true;
+
+      // Explore all 4 possible directions
+      foreach (var dir in Directions)
+      {
+        var nextRow = row + dir[0];
+        var nextCol = col + dir[1];
+        // Skip invalid or already seen cells
+        if (!IsValid(nextRow, nextCol) || seen[nextRow, nextCol]) continue;
+        // Skip cells where the effort required exceeds the given effort
+        if (Math.Abs(heights[nextRow][nextCol] - heights[row][col]) > effort) continue;
+        // Mark the next cell as seen and push it onto the stack
+        seen[nextRow, nextCol] = true;
+        stack.Push(new Pair(nextRow, nextCol));
+      }
+    }
+
+    // Return false if no path is found
+    return false;
+  }
+
+  // Helper function to check if a cell is within matrix bounds
+  public bool IsValid(int row, int col)
+  {
+    return row >= 0 && row < Rows && col >= 0 && col < Cols;
+  }
+}
+
+// Class to represent a cell in the matrix
+class Pair {
+  public int Row;
+  public int Col;
+  public Pair(int row, int col) {
+    this.Row = row;
+    this.Col = col;
+  }
+}
