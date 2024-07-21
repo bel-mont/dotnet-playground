@@ -321,3 +321,57 @@ class Pair {
     this.Col = col;
   }
 }
+
+/**
+ * A note on implementation
+ * All 3 examples we looked at in this article asked for a minimum. In all solutions, we return left.
+ * 
+ * If a problem is instead asking for a maximum, then left will not actually be the correct answer at the end. Instead, 
+ * we should return right.
+ * 
+ * Why does left point to the answer when looking for a minimum, but right points to the answer when looking for a maximum?
+ * 
+ * Let's say we're looking for a minimum and the answer is x. After doing check(x), we set right = x - 1 because check(x) 
+ * will return true, and we move the right bound to look for a better answer. As you can see, the correct answer is 
+ * actually outside of our search space now. That means every future iteration of check is going to fail, which means we
+ * will continuously increase left until eventually we try check(x - 1). This will fail and set left = (x - 1) + 1 = x.
+ * Our while loop terminates because left > right, and left is at the answer.
+ * 
+ * If we are instead looking for a maximum, after performing check(x), we set left = x + 1
+ * Again, the correct answer is outside of the search space and all future checks will fail. Eventually, 
+ * we try check(x + 1), fail, and set right = (x + 1) - 1 = x. The loop terminates because right < left, 
+ * and right is pointing at the answer.
+ */
+public class Leetcode1870 {
+    // Function to find the minimum speed required to arrive on time
+    public int MinSpeedOnTime(int[] dist, double hour) {
+        // If there are more trips than the hours available (ceiling of hour), it is not possible
+        if (dist.Length > Math.Ceiling(hour)) return -1;
+
+        var left = 1; // Minimum possible speed
+        var right = (int)Math.Pow(10, 7); // Absurdly high upper limit for speed
+
+        // Binary search to find the minimum speed that allows arriving on time
+        while (left <= right) {
+            var mid = left + (right - left) / 2; // Calculate the mid speed
+            // Check if it is possible to arrive on time with the current mid speed
+            if (Check(mid, dist, hour)) right = mid - 1; // If possible, search in the lower half
+            else left = mid + 1; // If not possible, search in the upper half
+        }
+
+        // Return the minimum speed found
+        return left;
+    }
+
+    // Helper function to check if a given speed allows arriving on time
+    public bool Check(int k, int[] dist, double hoursLimit) {
+        double hours = 0; // Initialize the total hours taken
+        foreach (var d in dist) {
+            hours = Math.Ceiling(hours); // Round up the hours for the previous trips to make the current trip take a full hour
+            hours += (double)d / k; // Add the time for the current trip
+        }
+
+        // Return true if the total hours taken is within the hours limit
+        return hours <= hoursLimit;
+    }
+}
