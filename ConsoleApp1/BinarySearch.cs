@@ -419,3 +419,31 @@ public class Leetcode1283 {
         return true;
     }
 }
+
+
+// This one really threw me off, I need to review it
+public class Leetcode1855 {
+    public int MaxDistance(int[] nums1, int[] nums2) {
+        var maxDistance = 0;
+        for (var i = 0; i < nums1.Length; i++)
+        {
+            var insertionPoint = BinarySearch(nums2, nums1[i]);
+            if (insertionPoint > i) maxDistance = Math.Max(maxDistance, insertionPoint - i);
+        }
+
+        return maxDistance;
+    }
+
+    public int BinarySearch(int[] arr, int target)
+    {
+        var left = 0;
+        var right = arr.Length - 1;
+        while (left < right)
+        {
+            var mid = left + (right - left + 1) / 2;
+            if (arr[mid] < target) right = mid - 1;
+            else left = mid;
+        }
+        return left;
+    }
+}
