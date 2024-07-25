@@ -447,3 +447,99 @@ public class Leetcode1855 {
         return left;
     }
 }
+
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Leetcode2476 {
+  public IList<IList<int>> ClosestNodes(TreeNode root, IList<int> queries) {
+    
+    // Convert tree to sorted array
+    // Do a DFS on the array to get it already sorted.
+    var list = MakeSortedList(root);
+
+    var ans = new List<IList<int>>();
+    foreach (var n in queries)
+    {
+      var insertionPoint = BinarySearch(n, list);
+      var answer = MakeAnswerList(insertionPoint, n, list);
+      ans.Add(answer);
+    }
+
+    return ans;
+  }
+
+  public List<int> MakeAnswerList(int insertionPoint, int n, List<int> list)
+  {
+    var answer = new List<int>();
+    if (insertionPoint >= 0 && insertionPoint < list.Count)
+    {
+      if (list[insertionPoint] == n) // found the exact value
+      {
+        answer.Add(list[insertionPoint]);
+        answer.Add(list[insertionPoint]);
+      }
+      else
+      {
+        var lowerBound = (insertionPoint > 0) ? list[insertionPoint - 1] : -1;
+        var upperBound = (insertionPoint < list.Count) ? list[insertionPoint] : -1;
+        answer.Add(lowerBound);
+        answer.Add(upperBound);
+      }
+    }
+    // outside of bounds
+    else if (insertionPoint == list.Count) // too big
+    {
+      answer.Add(list[insertionPoint - 1]);
+      answer.Add(-1);
+    }
+    else if (insertionPoint < 0) // too small
+    {
+      answer.Add(-1);
+      answer.Add(list[insertionPoint + 1]);
+    }
+    return answer;
+  }
+
+  public int BinarySearch(int target, IList<int> arr)
+  {
+    var left = 0;
+    var right = arr.Count - 1;
+    while (left <= right)
+    {
+      var mid = left + (right - left) / 2;
+      if (arr[mid] == target) return mid;
+      if (arr[mid] > target) right = mid - 1;
+      else left = mid + 1;
+    }
+
+    return left;
+  }
+
+  public List<int> MakeSortedList(TreeNode root)
+  {
+    var sortedArr = new List<int>();
+    Dfs(root, sortedArr);
+    return sortedArr;
+  }
+
+  public void Dfs(TreeNode root, IList<int> result)
+  {
+    if (root == null) return;
+    var left = root.left;
+    if (left != null) Dfs(left, result);
+    result.Add(root.val);
+    var right = root.right;
+    if (right != null) Dfs(right, result);
+  }
+}
