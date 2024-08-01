@@ -24,3 +24,23 @@ public class Leetcode46 {
         }
     }
 }
+
+public class Leetcode78 {
+    public IList<IList<int>> Subsets(int[] nums) {
+        var ans = new List<IList<int>>();
+        Backtrack(new List<int>(), 0, ans, nums);
+        return ans;
+    }
+
+    public void Backtrack(List<int> curr, int i, List<IList<int>> ans, int[] nums)
+    {
+        if (i > nums.Length) return;
+        ans.Add(new List<int>(curr));
+        for (var j = i; j < nums.Length; j++)
+        {
+            curr.Add(nums[j]);
+            Backtrack(curr, j + 1, ans, nums);
+            curr.RemoveAt(curr.Count - 1);
+        }
+    }
+}
