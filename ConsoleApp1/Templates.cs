@@ -308,6 +308,27 @@
 //     return left;
 // }
 
+// RECURSIVE Binary search
+// public int fn(int[] arr, int target) {
+//     return binarySearch(arr, target, 0, arr.length - 1);
+// }
+//
+// private int binarySearch(int[] arr, int target, int left, int right) {
+//     if (left > right) {
+//         return left;
+//     }
+//     int mid = left + (right - left) / 2;
+//     if (arr[mid] == target) {
+//         return mid;
+//     }
+//     if (arr[mid] > target) {
+//         return binarySearch(arr, target, left, mid - 1);
+//     } else {
+//         return binarySearch(arr, target, mid + 1, right);
+//     }
+// }
+
+
 // Binary search: duplicate elements, left-most insertion point
 // public int fn(int[] arr, int target) {
 //     int left = 0;
@@ -322,6 +343,23 @@
 //     }
 //
 //     return left;
+// }
+
+// RECURSIVE Binary search: duplicate elements, left-most insertion point
+// public int fn(int[] arr, int target) {
+//     return binarySearch(arr, target, 0, arr.length);
+// }
+//
+// private int binarySearch(int[] arr, int target, int left, int right) {
+//     if (left >= right) {
+//         return left;
+//     }
+//     int mid = left + (right - left) / 2;
+//     if (arr[mid] >= target) {
+//         return binarySearch(arr, target, left, mid);
+//     } else {
+//         return binarySearch(arr, target, mid + 1, right);
+//     }
 // }
 
 // Binary search: duplicate elements, right-most insertion point
@@ -339,6 +377,24 @@
 //
 //     return left;
 // }
+
+// RECURSIVE Binary search: duplicate elements, right-most insertion point
+// public int fn(int[] arr, int target) {
+//     return binarySearch(arr, target, 0, arr.length);
+// }
+//
+// private int binarySearch(int[] arr, int target, int left, int right) {
+//     if (left >= right) {
+//         return left;
+//     }
+//     int mid = left + (right - left) / 2;
+//     if (arr[mid] > target) {
+//         return binarySearch(arr, target, left, mid);
+//     } else {
+//         return binarySearch(arr, target, mid + 1, right);
+//     }
+// }
+
 
 // Binary search: for greedy problems
 // If looking for a minimum:
@@ -362,6 +418,29 @@
 //     return BOOLEAN;
 // }
 
+// RECURSIVE Binary search: for greedy problems
+// public int fn(int[] arr) {
+//     return binarySearch(arr, MINIMUM_POSSIBLE_ANSWER, MAXIMUM_POSSIBLE_ANSWER);
+// }
+//
+// private int binarySearch(int[] arr, int left, int right) {
+//     if (left > right) {
+//         return left;
+//     }
+//     int mid = left + (right - left) / 2;
+//     if (check(mid)) {
+//         return binarySearch(arr, left, mid - 1);
+//     } else {
+//         return binarySearch(arr, mid + 1, right);
+//     }
+// }
+//
+// public boolean check(int x) {
+//     // this function is implemented depending on the problem
+//     return BOOLEAN;
+// }
+
+
 // If looking for a maximum:
 // public int fn(int[] arr) {
 //     int left = MINIMUM_POSSIBLE_ANSWER;
@@ -382,6 +461,29 @@
 //     // this function is implemented depending on the problem
 //     return BOOLEAN;
 // }
+
+// RECURSIVE for maximum
+// public int fn(int[] arr) {
+//     return binarySearch(arr, MINIMUM_POSSIBLE_ANSWER, MAXIMUM_POSSIBLE_ANSWER);
+// }
+//
+// private int binarySearch(int[] arr, int left, int right) {
+//     if (left > right) {
+//         return right;
+//     }
+//     int mid = left + (right - left) / 2;
+//     if (check(mid)) {
+//         return binarySearch(arr, mid + 1, right);
+//     } else {
+//         return binarySearch(arr, left, mid - 1);
+//     }
+// }
+//
+// public boolean check(int x) {
+//     // this function is implemented depending on the problem
+//     return BOOLEAN;
+// }
+
 
 // Backtracking
 // public int backtrack(STATE curr, OTHER_ARGUMENTS...) {
