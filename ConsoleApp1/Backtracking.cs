@@ -44,3 +44,28 @@ public class Leetcode78 {
         }
     }
 }
+
+public class Leetcode77 {
+    public IList<IList<int>> Combine(int n, int k) {
+        var ans = new List<IList<int>>();
+        Backtrack(new List<int>(), ans, 1, n, k);
+        return ans;
+    }
+
+    public void Backtrack(List<int> curr, List<IList<int>> ans, int i, int n, int k)
+    {
+        if (curr.Count == k) 
+        {
+            ans.Add(new List<int>(curr));
+            return;
+        }
+    
+        for (var j = i; j <= n; j++)
+        {
+            curr.Add(j);
+            // the + 1 skips the same number, to avoid repeats in the next recursion
+            Backtrack(curr, ans, j + 1, n, k);
+            curr.RemoveAt(curr.Count - 1);
+        }
+    }
+}
