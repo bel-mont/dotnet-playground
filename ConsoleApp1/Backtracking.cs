@@ -69,3 +69,26 @@ public class Leetcode77 {
         }
     }
 }
+
+public class Leetcode797 {
+    public IList<IList<int>> AllPathsSourceTarget(int[][] graph) {
+        var ans = new List<IList<int>>();
+        Backtrack(new List<int>(), graph, 0, ans);
+        return ans;
+    }
+
+    public void Backtrack(List<int> curr, int[][] graph, int i, List<IList<int>> ans)
+    {
+        if (i == graph.Length - 1)
+        {
+            curr.Add(i);
+            ans.Add(new List<int>(curr));
+            curr.RemoveAt(curr.Count - 1);
+            return;
+        }
+
+        curr.Add(i);
+        for (var j = 0; j < graph[i].Length; j++) Backtrack(curr, graph, graph[i][j], ans);
+        curr.RemoveAt(curr.Count - 1);
+    }
+}
