@@ -557,3 +557,33 @@ public class Leetcode2476 {
     if (right != null) Dfs(right, result);
   }
 }
+
+public class Leetcode2187 {
+    public long MinimumTime(int[] time, int totalTrips) {
+    
+        long left = 1; // if I do 0 trips, nothing happens
+        var right = long.MaxValue;
+
+        // Check Math.Floor(k / time[i]). ex: k == 3, 3 / 1 == 3, 3 / 2 == 1.5 (1)
+
+        while (left <= right)
+        {
+            var t = left + (long)(right - left) / 2;
+            if (CanCompleteTrips(t, time, totalTrips)) right = t - 1;
+            else left = t + 1;
+        }
+
+        return left;
+    }
+
+    public bool CanCompleteTrips(long t, int[] busTimes, int totalTrips)
+    {
+        long currTrips = 0;
+        foreach(var n in busTimes)
+        {
+            currTrips += t / n;
+            if (currTrips >= totalTrips) return true;
+        }
+        return false;
+    }
+}
