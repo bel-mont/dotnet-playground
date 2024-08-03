@@ -187,6 +187,14 @@ public class Leetcode875 {
             right = Math.Max(right, pile);
         }
 
+        
+        // There are a few things that are key to knowing that this a "binary search" problem.
+        // 1) We do not know what k should be, but we know what range it can be in. We are looking for it by 
+        // trying out different values. The fact that we know the range is the key indicator.
+        // 2) Our piles value can be up to 10^9. Such a high number would take way too long without binary search.
+        // with BS, even if our max value is an absurdly high number, we can quickly cut down on the iterations.
+        // 3) the check function is wholly independent of the BS. The condition to check for depends on the problem.
+        
         // Perform binary search
         while (left <= right)
         {
@@ -195,6 +203,7 @@ public class Leetcode875 {
       
             // Check if Koko can finish eating all bananas at speed 'mid' within 'h' hours
             if (Check(mid, piles, h)) {
+                // the speed is enough to eat all the bananas, however we could a smaller value that also works
                 // If feasible, try a smaller speed by moving the right boundary to 'mid - 1'
                 right = mid - 1;
             } else {
@@ -222,6 +231,11 @@ public class Leetcode875 {
         }
     
         // Return true if total hours required is less than or equal to hours limit
+        
+        // example with k == 6
+        // if we have [3,6,7,11] in our piles, our hours would be 6
+        // the time to eat each pile is: [1, 1, 2, 2]
+        // with a limit of 8, it means our function would return true
         return hours <= hoursLimit;
     }
 }
