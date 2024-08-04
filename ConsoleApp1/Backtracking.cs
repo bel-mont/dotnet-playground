@@ -1,4 +1,6 @@
-﻿namespace ConsoleApp1;
+﻿using System.Text;
+
+namespace ConsoleApp1;
 
 public class Leetcode46 {
     public IList<IList<int>> Permute(int[] nums) {
@@ -90,5 +92,47 @@ public class Leetcode797 {
         curr.Add(i);
         for (var j = 0; j < graph[i].Length; j++) Backtrack(curr, graph, graph[i][j], ans);
         curr.RemoveAt(curr.Count - 1);
+    }
+}
+
+public class Leetcode17 {
+    public Dictionary<char, HashSet<char>> dict = new Dictionary<char, HashSet<char>>{
+        { '2', new HashSet<char> { 'a', 'b', 'c' } },
+        { '3', new HashSet<char> { 'd', 'e', 'f' } },
+        { '4', new HashSet<char> { 'g', 'h', 'i' } },
+        { '5', new HashSet<char> { 'j', 'k', 'l' } },
+        { '6', new HashSet<char> { 'm', 'n', 'o' } },
+        { '7', new HashSet<char> { 'p', 'q', 'r', 's' } },
+        { '8', new HashSet<char> { 't', 'u', 'v' } },
+        { '9', new HashSet<char> { 'w', 'x', 'y', 'z' } },
+    };
+
+    public IList<string> LetterCombinations(string digits) {
+        if (digits.Length == 0) return new List<string>();
+        var ans = new List<string>();
+        var curr = new StringBuilder();
+        Backtrack(ans, digits, curr, 0);
+        return ans;
+    }
+
+    public void Backtrack(List<string> ans, string digits, StringBuilder sb, int digitIndex)
+    {
+        if (sb.Length == digits.Length)
+        {
+            ans.Add(sb.ToString());
+            return;
+        }
+
+        for(var i = digitIndex; i < digits.Length; i++)
+        {
+            var num = digits[i];
+            foreach(var ch in dict[num])
+            {
+                // if (sb.Contains(ch)) continue;
+                sb.Append(ch);
+                Backtrack(ans, digits, sb, i + 1);
+                sb.Remove(sb.Length - 1, 1);
+            }
+        }
     }
 }
