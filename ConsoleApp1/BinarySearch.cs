@@ -550,10 +550,10 @@ public class Leetcode2476 {
   public void Dfs(TreeNode root, IList<int> result)
   {
     if (root == null) return;
-    var left = root.left;
+    var left = root.Left;
     if (left != null) Dfs(left, result);
-    result.Add(root.val);
-    var right = root.right;
+    result.Add(root.Val);
+    var right = root.Right;
     if (right != null) Dfs(right, result);
   }
 }
@@ -585,5 +585,33 @@ public class Leetcode2187 {
             if (currTrips >= totalTrips) return true;
         }
         return false;
+    }
+}
+
+
+public class Leetcode2226 {
+    public int MaximumCandies(int[] candies, long k) {
+        var left = 1;
+        // mid == # candies check
+        var right = 0;
+        foreach (var n in candies) right = Math.Max(right, n);
+
+        while (left <= right)
+        {
+            var mid = left + (right - left) / 2;
+            if (CanEachChildGetXCandies(candies, mid, k)) left = mid + 1;
+            else right = mid - 1;
+        }
+
+        return right;
+    }
+
+    public bool CanEachChildGetXCandies(int[] candies, int candiesCount, long childrenTotal)
+    {
+        long currChildren = 0;
+        foreach (var n in candies)
+            currChildren += (long)Math.Floor((double)n / candiesCount);
+
+        return currChildren >= childrenTotal;
     }
 }
