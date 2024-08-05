@@ -136,3 +136,31 @@ public class Leetcode17 {
         }
     }
 }
+
+public class Leetcode39 {
+    public IList<IList<int>> CombinationSum(int[] candidates, int target) {
+        var ans = new List<IList<int>>();
+        Backtrack(new List<int>(), 0, 0, ans, candidates, target);
+        return ans;
+    }
+
+    public void Backtrack(List<int> path, int start, int curr, List<IList<int>> ans, int[] candidates, int target)
+    {
+        if (curr == target)
+        {
+            ans.Add(new List<int>(path));
+            return;
+        }
+
+        for (var i = start; i < candidates.Length; i++)
+        {
+            var num = candidates[i];
+            if (curr + num <= target)
+            {
+                path.Add(num);
+                Backtrack(path, i, curr + num, ans, candidates, target);
+                path.RemoveAt(path.Count - 1);
+            }
+        }
+    }
+}
