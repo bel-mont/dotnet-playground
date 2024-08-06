@@ -164,3 +164,44 @@ public class Leetcode39 {
         }
     }
 }
+
+public class Leetcode52 {
+    private int Size;
+
+    public int TotalNQueens(int n) {
+        Size = n;
+        return Backtrack(0, new HashSet<int>(), new HashSet<int>(), new HashSet<int>());
+    }
+
+    public int Backtrack(int row, HashSet<int> diagonals, HashSet<int> antiDiagonals, HashSet<int> cols)
+    {
+        // base case occurs when N queens have been placed
+        if (row == Size) return 1;
+
+        var solutions = 0;
+        for (var col = 0; col < Size; col++)
+        {
+            var currDiagonal = row - col;
+            var currAntiDiagonal = row + col;
+
+            // if we cannot place the queen, we skip
+            if (cols.Contains(col) || diagonals.Contains(currDiagonal) || antiDiagonals.Contains(currAntiDiagonal)) continue;
+
+            // add the current item to our board state
+            cols.Add(col);
+            diagonals.Add(currDiagonal);
+            antiDiagonals.Add(currAntiDiagonal);
+
+            // move to next row with new board state
+            solutions += Backtrack(row + 1, diagonals, antiDiagonals, cols);
+
+            // remove the queen from the board after we
+            // have explored all paths
+            cols.Remove(col);
+            diagonals.Remove(currDiagonal);
+            antiDiagonals.Remove(currAntiDiagonal);
+        }
+
+        return solutions;
+    }
+}
