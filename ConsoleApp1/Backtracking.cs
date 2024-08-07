@@ -205,3 +205,62 @@ public class Leetcode52 {
         return solutions;
     }
 }
+
+// Uses DFS with backtracking
+public class Leetcode79
+{
+    public int Rows;
+    public int Cols;
+    public string Target;
+    public int[][] Directions = { new[] { 0, 1 }, new[] { 1, 0 }, new[] { 0, -1 }, new[] { -1, 0 } };
+    public bool[][] Seen;
+
+    public bool Exist(char[][] board, string word)
+    {
+        Rows = board.Length;
+        Cols = board[0].Length;
+        Target = word;
+        Seen = new bool[Rows][];
+        for (var i = 0; i < Rows; i++) Seen[i] = new bool[Cols];
+
+        for (var row = 0; row < Rows; row++)
+        {
+            for (var col = 0; col < Cols; col++)
+            {
+                if (board[row][col] != word[0]) continue;
+                Seen[row][col] = true;
+                if (Backtrack(row, col, 1, board)) return true;
+                // If we do not find the word, we need to reset the board state/
+                // We remove the latest character and move on to another path.
+                Seen[row][col] = false;
+            }
+        }
+
+        return false;
+    }
+
+    public bool Backtrack(int row, int col, int i, char[][] board)
+    {
+        if (i == Target.Length) return true;
+
+        foreach (var dir in Directions)
+        {
+            var nextRow = row + dir[0];
+            var nextCol = col + dir[1];
+            if (!IsValid(nextRow, nextCol) || Seen[nextRow][nextCol]) continue;
+            if (board[nextRow][nextCol] != Target[i]) continue;
+            Seen[nextRow][nextCol] = true;
+            if (Backtrack(nextRow, nextCol, i + 1, board)) return true;
+            Seen[nextRow][nextCol] = false;
+        }
+
+        return false;
+    }
+
+    public bool IsValid(int row, int col)
+    {
+        return row >= 0 && row < Rows && col >= 0 && col < Cols;
+    }
+}
+
+

@@ -126,7 +126,7 @@ public class Leetcode1971
 public class Leetcode695 {
   int gridRow;
   int gridCol;
-  int[][] directions = {new int[] {0, 1}, new int[] {1, 0}, new int[] {0, -1}, new int[] {-1, 0}};
+  int[][] directions = {new[] {0, 1}, new[] {1, 0}, new[] {0, -1}, new[] {-1, 0}};
   bool[,] seen;
 
   public int MaxAreaOfIsland(int[][] grid) {
