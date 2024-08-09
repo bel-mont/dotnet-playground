@@ -263,4 +263,33 @@ public class Leetcode79
     }
 }
 
+public class Leetcode22 {
+    public IList<string> GenerateParenthesis(int n) {
+        var ans = new List<string>();
+        Backtrack(ans, n, new StringBuilder(), 0, 0);
+        return ans;
+    }
 
+    public void Backtrack(IList<string> ans, int n, StringBuilder sb, int open, int close)
+    {
+        if (sb.Length == n * 2)
+        {
+            // we have added all possible pairs
+            ans.Add(sb.ToString());
+            return;
+        }
+
+        if (open < n)
+        {
+            sb.Append("(");
+            Backtrack(ans, n, sb, open + 1, close);
+            sb.Remove(sb.Length - 1, 1);
+        }
+        if (close < open)
+        {
+            sb.Append(")");
+            Backtrack(ans, n, sb, open, close + 1);
+            sb.Remove(sb.Length - 1, 1);
+        }
+    }
+}
