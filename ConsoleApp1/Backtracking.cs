@@ -293,3 +293,42 @@ public class Leetcode22 {
         }
     }
 }
+
+public class Leetcode967 {
+    public int[] NumsSameConsecDiff(int n, int k)
+    {
+        var ans = new List<int>();
+        var sb = new StringBuilder();
+        for (var i = 1; i <= 9; i++)
+        {
+            sb.Append(i.ToString());
+            Backtrack(ans, n, k, i, sb);
+            sb.Remove(sb.Length - 1, 1);
+        }
+        return ans.ToArray();
+    }
+
+    public void Backtrack(List<int> ans, int n, int k, int curr, StringBuilder sb)
+    {
+        if (sb.Length == n)
+        {
+            ans.Add(int.Parse(sb.ToString()));
+            return;
+        }
+    
+        // If we can "go up" from curr, by k
+        if (curr + k <= 9)
+        {
+            sb.Append((curr + k).ToString());
+            Backtrack(ans, n, k, curr + k, sb);
+            sb.Remove(sb.Length - 1, 1);
+        }
+        // check if we can go down
+        if (curr - k >= 0 && k > 0) // k == 0 edge case
+        {
+            sb.Append((curr - k).ToString());
+            Backtrack(ans, n, k, curr - k, sb);
+            sb.Remove(sb.Length - 1, 1);
+        }
+    }
+}
