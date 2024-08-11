@@ -332,3 +332,33 @@ public class Leetcode967 {
         }
     }
 }
+
+
+public class Leetcode216 {
+    public IList<IList<int>> CombinationSum3(int k, int n) {
+        var ans = new List<IList<int>>();
+        Backtrack(ans, k, n, 1, 0, new List<int>());
+        return ans;
+    }
+
+    public void Backtrack(List<IList<int>> ans, int k, int n, int i, int sum, List<int> curr)
+    {
+        if (curr.Count == k)
+        {
+            if (sum == n) ans.Add(new List<int>(curr));
+            return;
+        }
+
+        for (var j = i; j <= Math.Min(9, n); j++)
+        {
+            if (sum + j <= n)
+            {
+                sum += j;
+                curr.Add(j);
+                Backtrack(ans, k, n, j + 1, sum, curr);
+                sum -= j;
+                curr.RemoveAt(curr.Count - 1);
+            }
+        }
+    }
+}
