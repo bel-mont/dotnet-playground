@@ -362,3 +362,32 @@ public class Leetcode216 {
         }
     }
 }
+
+public class Leetcode540 {
+    public int SingleNonDuplicate(int[] nums) {
+        if (nums.Length == 1) return nums[0];
+        return Walk(nums, 0, nums.Length - 1);
+    }
+
+    public int Walk(int[] nums, int lo, int hi)
+    {
+        var mid = lo + (hi - lo) / 2;
+        var isAtLeftEdge = mid - 1 < 0 && nums[mid + 1] != nums[mid];
+        var isAtRightEdge = mid + 1 >= nums.Length && nums[mid - 1] != nums[mid];
+        if (isAtLeftEdge || isAtRightEdge) return nums[mid];
+        if (nums[mid - 1] != nums[mid] && nums[mid + 1] != nums[mid]) return nums[mid];
+
+        var leftNumIsEqual = nums[mid] == nums[mid - 1];
+        if (leftNumIsEqual)
+        {
+            var evenMid = mid % 2 == 0; // this means the single num is on the left
+            if (evenMid) return Walk(nums, lo, mid - 1);
+            else return Walk(nums, mid + 1, hi);
+        }
+        else
+        {
+            if (mid % 2 == 0) return Walk(nums, mid + 1, hi);
+            else return Walk(nums, lo, mid - 1);
+        }
+    }
+}
