@@ -615,3 +615,60 @@ public class Leetcode2226 {
         return currChildren >= childrenTotal;
     }
 }
+
+
+/**
+ * // This is ArrayReader's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class ArrayReader {
+ *     // Compares the sum of arr[l..r] with the sum of arr[x..y] 
+ *     // return 1 if sum(arr[l..r]) > sum(arr[x..y])
+ *     // return 0 if sum(arr[l..r]) == sum(arr[x..y])
+ *     // return -1 if sum(arr[l..r]) < sum(arr[x..y])
+ *     public int CompareSub(int l, int r, int x, int y) {}
+ *
+ *     // Returns the length of the array
+ *     public int Length() {}
+ * }
+ */
+
+// Issue: I completely ignored the fact that a comparison of odd arrays would cause one of them to potentially be larger, even if it did not contain
+// the larger integer. I should go back to elementary school.
+// TODO: Change the - 1 and + 1 stuff to be more readable. Math.Floor and Math.Ceiling are better?
+class Leetcode1533 {
+  public int GetIndex(ArrayReader reader) {
+    var length = reader.Length() - 1;
+    // take as much as possible from each available space
+    var l = 0;
+    var r = l + (length - l - 1) / 2; // bias towards left
+    var x = l + (length - l + 1) / 2; // bias towards right
+    var y = length;
+    return Walk(l, r, x, y, reader);
+  }
+
+  public int Walk(int l, int r, int x, int y, ArrayReader reader)
+  {
+    if (l == y) return l;
+    // Before comparing, if we have an odd length for our current array size we should
+    // change the r to be - 1, so it leaves a number in the middle
+    var arrLng = y - l + 1;
+    int comparison;
+    if (arrLng % 2 != 0) comparison = reader.CompareSub(l, r, x + 1, y);
+    else comparison = reader.CompareSub(l, r, x, y);
+
+    if (comparison == 0)
+    {
+      // If we have an odd array length, it means the larger number is in the middle
+      if (arrLng % 2 != 0) return x;
+      else return l;
+    }
+    else if (comparison == -1) // left is smaller, so we move to the right
+    {
+      return Walk(x, x + (y - x - 1) / 2, x + (y - x + 1) / 2, y, reader);
+    }
+    else // right is smaller, so we move to the left
+    {
+      return Walk(l, l + (r - l - 1) / 2, l + (r - l + 1) / 2, r, reader);
+    }
+  }
+}
