@@ -96,7 +96,8 @@ public class Leetcode797 {
 }
 
 public class Leetcode17 {
-    public Dictionary<char, HashSet<char>> dict = new Dictionary<char, HashSet<char>>{
+    public Dictionary<char, HashSet<char>> dict = new()
+    {
         { '2', new HashSet<char> { 'a', 'b', 'c' } },
         { '3', new HashSet<char> { 'd', 'e', 'f' } },
         { '4', new HashSet<char> { 'g', 'h', 'i' } },

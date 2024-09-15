@@ -672,3 +672,39 @@ class Leetcode1533 {
     }
   }
 }
+
+public class Leetcode1231 {
+    public int MaximizeSweetness(int[] sweetness, int k) {
+        // really similar to 2226, but much more convoluted explanation
+        // complicated setup
+        var l = 1;
+        var r = 0;
+        foreach (var n in sweetness) r += n;
+
+        while (l <= r)
+        {
+            var mid = l + (r - l) / 2; // the mid is my current sum guess
+            if (CanDivideBarIntoKPiecesWithSum(sweetness, k, mid)) l = mid + 1;
+            else r = mid - 1;
+        }
+
+        return r;
+    }
+
+    public bool CanDivideBarIntoKPiecesWithSum(int[] sweetness, int k, int sumGuess)
+    {
+        var count = 0;
+        var sum = 0;
+        foreach (var n in sweetness)
+        {
+            sum += n;
+            if (sum >= sumGuess)
+            {
+                // we restart so we can check the next number
+                count++;;
+                sum = 0;
+            }
+        }
+        return count > k;
+    }
+}
